@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <title>Sparrow</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -10,7 +10,10 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="bg-slate-500 h-full">
+    <div class="container mx-auto px-4">
+      <%= render partial: "shared/flash" %>
+      <%= yield %>
+    </div>
   </body>
 </html>
