@@ -1,0 +1,28 @@
+<h1 class="text-2xl bold">Users</h1>
+<div>
+    <% if current_user %>
+    <table class="table-auto mt-8 w-full text-sm text-left text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-slate-200">
+            <tr>
+                <th scope="col" class="px-6 py-3">Email</th>
+                <th scope="col" class="px-6 py-3">Role</th>
+                <th scope="col" class="px-6 py-3"></th>
+            </tr>
+        </thead>
+        <% @users.each do |user| %>
+            <tbody>
+                <tr class="border-b">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        <%= user.email %>
+                    </th>
+                    <td class="px-6 py-4">
+                        <%= user.roles.pluck(:name).join(',').capitalize %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <%= link_to "Edit", edit_user_path(user), class: "text-blue-400 font-semibold" %>
+                    </td>
+                </tr>
+            </tbody>
+        <% end %>
+    <% end %>
+</div>

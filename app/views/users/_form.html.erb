@@ -1,0 +1,15 @@
+<div class="mt-8">
+    <%= form_with(model: @user) do |f| %>
+        <div class="flex gap-4 capitalize">
+            <%= f.collection_check_boxes :role_ids, Role.all, :id, :name %>
+        </div>
+
+        <% if @user.errors[:roles].present? %>
+            <div class="bg-rose-400 mt-5 p-3 rounded-lg text-white shadow" role="alert">
+                <%= @user.errors[:roles].join(';') %>
+            </div>
+        <% end %>
+        
+        <%= f.button "Update", class: "mt-4 bg-blue-400 text-white p-2 rounded-lg" %>
+    <% end %>
+</div>
