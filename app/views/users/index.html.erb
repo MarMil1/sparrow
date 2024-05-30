@@ -1,17 +1,17 @@
 <h1 class="text-2xl bold">Users</h1>
-<div>
+<div class="">
     <% if current_user %>
-    <table class="table-auto mt-8 w-full text-sm text-left text-gray-500">
-        <thead class="text-xs text-gray-700 uppercase bg-slate-200">
-            <tr>
+    <table class="table-auto w-full text-sm text-left leading-5">
+        <thead class="text-xs border-b uppercase">
+            <tr class="text-[#101827]">
                 <th scope="col" class="px-6 py-3">Email</th>
                 <th scope="col" class="px-6 py-3">Role</th>
-                <th scope="col" class="px-6 py-3"></th>
+                <th scope="col" class="px-6 py-3">Action</th>
             </tr>
         </thead>
         <% @users.each do |user| %>
-            <tbody>
-                <tr class="border-b">
+            <tbody class="text-gray-500">
+                <tr class="border-b hover:bg-white">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                         <%= user.email %>
                     </th>
