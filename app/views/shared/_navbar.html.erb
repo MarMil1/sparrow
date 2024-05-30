@@ -27,7 +27,7 @@
                         <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "bg-rose-400 p-2 rounded-lg text-white hover:bg-rose-300" %>
                     </div>
                     <div class="dropdown relative text-sm" data-dropdown>
-                        <button class="dropbtn rounded-full border border-2 border-blue-500 bg-blue-300 font-semibold text-[#101827]">
+                        <button class="dropbtn rounded-full border border-2 border-blue-500 bg-blue-300 font-semibold text-[#101827]" data-dropdown-toggle>
                             <div class="border border-2 border-white p-2 rounded-full">
                                 AE
                             </div>
@@ -48,7 +48,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="text-white px-2 py-1 bg-purple-600 rounded-xl capitalize">
+                                    <div class="text-white px-2 py-1 bg-purple-500 rounded-xl capitalize">
                                         <%= current_user.roles.pluck(:name).join(', ') %>
                                     </div>
                                 </div>
