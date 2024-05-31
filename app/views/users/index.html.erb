@@ -1,5 +1,5 @@
 <h1 class="text-2xl bold">Users</h1>
-<div class="">
+<div>
     <% if current_user %>
     <table class="table-auto w-full text-sm text-left leading-5">
         <thead class="text-xs border-b uppercase">
@@ -13,7 +13,14 @@
             <tbody class="text-gray-500">
                 <tr class="border-b hover:bg-white">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                        <%= user.email %>
+                        <div class="flex items-center gap-3">
+                            <%= render "shared/user_blob", user: user %>
+                            <div>
+                                <div><%= user.first_name.capitalize %> <%= user.last_name.capitalize %></div>
+                                <div class="text-gray-500 font-normal"><%= user.email %></div>
+                            <div>
+                        </div>
+                        
                     </th>
                     <td class="px-6 py-4">
                         <%= user.roles.pluck(:name).join(',').capitalize %>

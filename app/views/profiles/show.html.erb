@@ -2,8 +2,8 @@
   <h1>Profile</h1>
 </div>
 <div>
-    <p><strong>First Name:</strong> <%= @user.email %></p>
-    <p><strong>Last Name:</strong> <%= @user.email %></p>
+    <p><strong>First Name:</strong> <%= @user.first_name %></p>
+    <p><strong>Last Name:</strong> <%= @user.last_name %></p>
     <p><strong>Email:</strong> <%= @user.email %></p>
     <p><strong>Role:</strong> <%= @user.roles.pluck(:name).join(', ') %></p>
 </div>
