@@ -26,7 +26,10 @@
                         <%= user.roles.pluck(:name).join(',').capitalize %>
                     </td>
                     <td class="px-6 py-4">
-                        <%= link_to "Edit", edit_user_path(user), class: "text-blue-400 font-semibold" %>
+                        
+                        <a href="<%= edit_user_path(user) %>">
+                            <%= heroicon "ellipsis-vertical" %>
+                        </a>
                     </td>
                 </tr>
             </tbody>
