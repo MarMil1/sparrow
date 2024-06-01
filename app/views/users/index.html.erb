@@ -26,10 +26,13 @@
                         <%= user.roles.pluck(:name).join(',').capitalize %>
                     </td>
                     <td class="px-6 py-4">
-                        
-                        <a href="<%= edit_user_path(user) %>">
-                            <%= heroicon "ellipsis-vertical" %>
-                        </a>
+
+                        <%= render 'shared/tooltip', position_class: tooltip_bottom_left, 
+                                                     tooltip_body: "Edit user account" do %>
+                            <a href="<%= edit_user_path(user) %>">
+                                <%= heroicon "ellipsis-vertical" %>
+                            </a>
+                        <% end %>
                     </td>
                 </tr>
             </tbody>
