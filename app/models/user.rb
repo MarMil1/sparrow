@@ -10,6 +10,8 @@ class User < ApplicationRecord
 
   validate :validate_single_role
 
+  validates :first_name, :last_name, presence: true
+
   def validate_single_role
     if self.roles.count > 1
       errors.add(:roles, "User can only have one role.")

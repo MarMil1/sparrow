@@ -9,56 +9,54 @@
             <% if current_user %>
                 <div class="flex items-center justify-between gap-2">
                     <div class="dropdown relative text-sm" data-dropdown>
-                        <button class="dropbtn rounded-full border border-2 border-blue-500 bg-blue-300 font-semibold text-[#101827]" data-dropdown-toggle>
-                            <div class="border border-2 border-white p-2 rounded-full">
-                                AE
-                            </div>
-                        </button>
+                        <div class="cursor-pointer" data-dropdown-toggle>
+                            <%= render "shared/user_blob", user: current_user %>
+                        </div>
                         <div class="dropdown-content hidden absolute bg-white mt-2 right-0 rounded-lg shadow-lg">
                             <div class="border-b p-3 flex justify-center items-center gap-6">
                                 <div class="flex justify-center items-center gap-4">
-                                    <div class="rounded-full border border-2 border-blue-500 bg-blue-300 font-semibold text-[#101827]">
-                                        <div class="border border-2 border-white p-2 rounded-full">
-                                            AE
-                                        </div>
-                                    </div>
+                                    <%= render "shared/user_blob", user: current_user %>
                                     <div>
-                                        <div class="font-semibold text-[#101827]">Admin Example</div>
+                                        <div class="font-semibold text-[#101827]">
+                                            <%= "#{current_user.first_name} #{current_user.last_name}"%>
+                                        </div>
                                         <div class="text-gray-400">
                                             <%= current_user.email %>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
-                                    <%= render partial: "shared/user_role_tag" %>
+                                    <%= render "shared/user_role_tag" %>
                                 </div>
                             </div>
                             <a href="<%= root_path %>">
-                                <div class="p-3 hover:bg-gray-200">
-                                    <div class="text-gray-500 text-sm">
-                                    Dashboard
+                                <div class="p-3 hover:bg-slate-200">
+                                    <div class="text-gray-500 text-sm flex gap-2 items-center">
+                                        <%= heroicon "home" %> Dashboard
                                     </div>
                                 </div>
                             </a>
                             <% if current_user.roles.first.name == "admin" %>
                                 <a href="<%= users_path %>">
-                                    <div class="p-3 hover:bg-gray-200">
-                                        <div class="text-gray-500 text-sm">
-                                            Users
+                                    <div class="p-3 hover:bg-slate-200">
+                                        <div class="text-gray-500 text-sm flex gap-2 items-center">
+                                            <%= heroicon "users" %> Users
                                         </div>
                                     </div>
                                 </a>
-                            <% end %> 
-                            <a>
-                                <div class="border-b p-3 hover:bg-gray-200">
-                                    <div class="text-gray-500 text-sm">
-                                        Profile & account
+                            <% end %>
+                            <a href="<%= profile_path %>">
+                                <div class="border-b p-3 hover:bg-slate-200">
+                                    <div class="text-gray-500 text-sm flex gap-2 items-center">
+                                        <%= heroicon "user" %> Profile & account
                                     </div>
                                 </div>
                             </a>
                             <div class="group border-b">
                                 <div class="text-gray-500 text-sm">
-                                    <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "p-3 group-hover:bg-red-200 w-full text-left" %>
+                                    <%= button_to destroy_user_session_path, method: :delete, class: "p-3 group-hover:bg-red-200 w-full text-left flex gap-2 items-center" do %>
+                                        <%= heroicon "arrow-up-tray", options: { class: "rotate-90" } %> Sign Out
+                                    <% end %>
                                 </div>
                             </div>
                         </div>
