@@ -1,31 +1,52 @@
 class UsersController < ApplicationController
-    before_action :require_admin_user_logged_in!
+    before_action :set_user, only: [:edit, :update]
+    before_action :check_user_role, only: [:index]
     
     def index
-        @users = User.all
+      @users = User.all
     end
 
+    def show
+        @user = User.find(params[:id])
+    end
+    
     def edit
-        @user = User.find_by(user_params)
+      unless current_user_can_edit_user?(@user)
+        redirect_to root_path, alert: "You are not authorized to perform this action."
+      end
+    end
+    
+    def update
+      unless current_user_can_edit_user?(@user)
+        redirect_to root_path, alert: "You are not authorized to perform this action."
+        return
+      end
+      
+      if @user.update(user_params) 
+        redirect_to user_path(@user), notice: "User was successfully updated."
+      else
+        render :edit, status: :unprocessable_entity
+      end
+    end
+    
+    private
+    
+    def set_user
+      @user = User.find(params[:id])
+    end
+    
+    def user_params
+      params.require(:user).permit(:first_name, :last_name, :email, { role_ids: [] })
+    end
+    
+    def current_user_can_edit_user?(user)
+        current_user.roles.first.name == 'admin' || 
+        (current_user == user && current_user.roles.first.name != 'admin')
     end
 
-    def update
-        @user = User.find_by(user_params)
-
-        if @user.update(user_role_params)
-            redirect_to users_path, notice: "User was successfully updated."
-        else
-            render :edit, status: :unprocessable_entity
+    def check_user_role
+        if current_user.roles.first.name == 'staff' || current_user.roles.first.name == 'client'
+            redirect_to root_path, alert: "You are not authorized to view this page."
         end
     end
-
-    private
-
-    def user_params
-        params.permit(:id)
-    end
-
-    def user_role_params
-        params.require(:user).permit({role_ids: []})
-    end
-end
+  end

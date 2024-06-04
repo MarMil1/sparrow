@@ -1,4 +1,4 @@
-<h1 class="text-2xl bold">Users</h1>
+<h1 class="text-xl bold">Users</h1>
 <div>
     <% if current_user %>
     <table class="table-auto w-full text-sm text-left leading-5">
@@ -11,15 +11,17 @@
         </thead>
         <% @users.each do |user| %>
             <tbody class="text-gray-500">
-                <tr class="border-b hover:bg-white">
+                <tr class="border-b hover:bg-slate-100">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                        <div class="flex items-center gap-3">
-                            <%= render "shared/user_blob", user: user %>
-                            <div>
-                                <div><%= user.first_name.capitalize %> <%= user.last_name.capitalize %></div>
-                                <div class="text-gray-500 font-normal"><%= user.email %></div>
-                            <div>
-                        </div>
+                        <%= link_to user_path(user) do %>
+                            <div class="flex items-center gap-3">
+                                <%= render "shared/user_blob", user: user %>
+                                <div>
+                                    <div><%= user.first_name.capitalize %> <%= user.last_name.capitalize %></div>
+                                    <div class="text-gray-500 font-normal"><%= user.email %></div>
+                                <div>
+                            </div>
+                        <% end %>
                         
                     </th>
                     <td class="px-6 py-4">
