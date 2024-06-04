@@ -18,7 +18,7 @@
                                     <%= render "shared/user_blob", user: current_user %>
                                     <div>
                                         <div class="font-semibold text-[#101827]">
-                                            <%= "#{current_user.first_name} #{current_user.last_name}"%>
+                                            <%= "#{current_user.first_name.capitalize} #{current_user.last_name.capitalize}"%>
                                         </div>
                                         <div class="text-gray-400">
                                             <%= current_user.email %>

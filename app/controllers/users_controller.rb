@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-    before_action :set_user, only: [:edit, :update]
+    before_action :set_user, only: [:edit, :update, :destroy]
     before_action :check_user_role, only: [:index]
     
     def index
@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     end
 
     def show
-        @user = User.find(params[:id])
+      @user = User.find(params[:id])
     end
     
     def edit
@@ -26,6 +26,18 @@ class UsersController < ApplicationController
         redirect_to user_path(@user), notice: "User was successfully updated."
       else
         render :edit, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      if current_user_can_edit_user?(@user) && current_user.roles.first.name == 'admin'
+        @user.destroy
+        redirect_to users_path, notice: "User was successfully deleted."
+      elsif current_user_can_edit_user?(@user) && current_user.roles.first.name != 'admin'
+        @user.destroy
+        redirect_to user_session_path, notice: "User was successfully deleted."
+      else
+        redirect_to user_session, alert: "You are not authorized to perform this action."
       end
     end
     
