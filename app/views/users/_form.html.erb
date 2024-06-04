@@ -55,8 +55,6 @@
             <% end %>
         </div>
     
-        
-
         <% if @user.errors[:roles].present? %>
             <div class="bg-rose-400 mt-5 p-3 rounded-lg text-white shadow" role="alert">
                 <%= @user.errors[:roles].join(';') %>
@@ -64,13 +62,13 @@
         <% end %>
         
         <div class="mt-4 flex gap-4 justify-end items-center">
-            <%= link_to "Cancel", user_path(@user), class: "p-2 rounded hover:bg-gray-200 text-[#101827]" %>
-            <%= f.button "Save Changes", class: "p-2 rounded border border-slate-300 hover:bg-blue-50 hover:border-blue-100 cursor-pointer text-slate-600" %>
+            <%= link_to "Cancel", user_path(@user), class: "mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto" %>
+            <%= f.button "Save Changes", class: "mt-3 inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-500 sm:mt-0 sm:w-auto" %>
         </div>
     <% end %>
 
     <div class="rounded border border-slate-300 mt-10">
-        <div class="text-red-400 text-lg p-4 border-b font-semibold">
+        <div class="text-red-600 text-lg p-4 border-b font-semibold">
             Delete account
         </div>
         <div class="flex justify-between items-center border-b">
@@ -79,7 +77,11 @@
             </div>
             <div class="w-1/2 px-4 py-2 text-[#101827]">
                 <div class="float-right">
-                    <%= link_to "Delete account",  user_path(@user), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "p-3 border border-red-400 rounded text-red-600 hover:bg-red-50" %>
+                    <%= render 'shared/dialog_box', id: 'dialog-1', title: 'Deactivate account', content: 'Are you sure you want to delete your account? All of your data will be permanently removed. This action cannot be undone.' do %>
+                        <%= link_to "Delete account", user_path(@user), data: { turbo_method: :delete }, class: "inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" %>
+                    <% end %>
+
+                    <button data-dialog-toggle="dialog-1" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Delete account</button>
                 </div>
             </div>
         </div>
