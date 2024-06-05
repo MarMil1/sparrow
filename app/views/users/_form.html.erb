@@ -45,11 +45,12 @@
             </div>
             <% if current_user.roles.first.name == 'admin' %>
                 <div class="flex justify-between items-center border-b">
-                    <div class="w-1/2 text-[#101827] p-4 font-medium" >
-                        Role
+                    <div class="w-1/2 text-[#101827] p-4 font-medium">
+                    Role
                     </div>
-                    <div class="w-1/2 flex gap-4 items-center capitalize p-4">
-                        <%= f.collection_check_boxes :role_ids, Role.all, :id, :name %>
+                    <div class="w-1/2 px-4 py-2 text-[#101827]">
+                        <% roles = ['admin', 'staff', 'client'] %>
+                        <%= f.collection_select :role, roles, :to_s, :to_s, { include_blank: false, selected: @user.roles.first.name }, { class: 'form-select capitalize p-2 border rounded w-full' } %>
                     </div>
                 </div>
             <% end %>
