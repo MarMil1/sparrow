@@ -2,3 +2,5 @@
 import "@hotwired/turbo-rails";
 import "./controllers";
 import "./dialog_box";
+import "./dropdown_selection";
+import "./dropdown_menu";

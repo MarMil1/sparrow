@@ -7,7 +7,7 @@
                 </div>
                 <div class="">
                     <div class="font-semibold text-[#101827]">
-                        <%= "#{@user.first_name} #{@user.last_name}"%>
+                        <%= "#{@user.first_name} #{@user.last_name}" %>
                     </div>
                     <div class="text-gray-400 text-sm">
                         Joined on <%= @user.created_at.to_fs(:long_ordinal) %>
@@ -43,25 +43,44 @@
                     <%= f.text_field :email, class: "p-2 border rounded w-full" %>
                 </div>
             </div>
+
             <% if current_user.roles.first.name == 'admin' %>
                 <div class="flex justify-between items-center border-b">
-                    <div class="w-1/2 text-[#101827] p-4 font-medium">
-                    Role
-                    </div>
+                    <div class="w-1/2 text-[#101827] p-4 font-medium">Role</div>
                     <div class="w-1/2 px-4 py-2 text-[#101827]">
-                        <% roles = ['admin', 'staff', 'client'] %>
-                        <%= f.collection_select :role, roles, :to_s, :to_s, { include_blank: false, selected: @user.roles.first.name }, { class: 'form-select capitalize p-2 border rounded w-full' } %>
+                        <% unique_id = SecureRandom.hex(6) %>
+                        <% selection_items = ['admin', 'staff', 'client'] %>
+
+                        <% content_for :toggle_dropdown_selection_2 do %>
+                            <p id="toggle-<%= unique_id %>" type="button" class="inline-flex w-full justify-between border rounded bg-white px-3 py-2 text-[#101827] hover:bg-gray-50">
+                                <%= @user.roles.first.name.capitalize %>
+                                <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                </svg>
+                            </p>
+                        <% end %>
+
+                        <% content_for :menu_dropdown_selection_2 do %>
+                            <% selection_items.each do |selection_item| %>
+                                <p class="cursor-pointer p-2 hover:bg-gray-200" data-selection-item="<%= selection_item %>" data-selection-toggle-id="toggle-<%= unique_id %>" data-selection-hidden-id="selection-item-hidden-<%= unique_id %>">
+                                    <%= selection_item.capitalize %>
+                                </p>
+                            <% end %>
+                        <% end %>
+
+                        <%= render 'shared/dropdown_selection', id: "dropdown-selection-#{unique_id}", toggle: :toggle_dropdown_selection_2, menu: :menu_dropdown_selection_2 %>
+                        <%= f.hidden_field :role, id: "selection-item-hidden-#{unique_id}", value: @user.roles.first.name %>
                     </div>
                 </div>
             <% end %>
         </div>
-    
+
         <% if @user.errors[:roles].present? %>
             <div class="bg-rose-400 mt-5 p-3 rounded-lg text-white shadow" role="alert">
                 <%= @user.errors[:roles].join(';') %>
             </div>
         <% end %>
-        
+
         <div class="mt-4 flex gap-4 justify-end items-center">
             <%= link_to "Cancel", user_path(@user), class: "mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto" %>
             <%= f.button "Save Changes", class: "mt-3 inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-500 sm:mt-0 sm:w-auto" %>
@@ -73,16 +92,16 @@
             Delete account
         </div>
         <div class="flex justify-between items-center border-b">
-            <div class="w-1/2 text-[#101827] p-4 text-sm" >
+            <div class="w-1/2 text-[#101827] p-4 text-sm">
                 All of your data will be deleted. You will not be able to retrieve your account.
             </div>
             <div class="w-1/2 px-4 py-2 text-[#101827]">
                 <div class="float-right">
-                    <%= render 'shared/dialog_box', id: 'dialog-1', title: 'Deactivate account', content: 'Are you sure you want to delete your account? All of your data will be permanently removed. This action cannot be undone.' do %>
+                    <%= render 'shared/dialog_box', id: 'dialog-2', title: 'Delete account', content: 'Are you sure you want to delete your account? All of your data will be permanently removed. This action cannot be undone.' do %>
                         <%= link_to "Delete account", user_path(@user), data: { turbo_method: :delete }, class: "inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" %>
                     <% end %>
 
-                    <button data-dialog-toggle="dialog-1" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Delete account</button>
+                    <button data-dialog-toggle="dialog-2" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Delete account</button>
                 </div>
             </div>
         </div>
