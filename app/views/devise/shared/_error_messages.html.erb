@@ -1,15 +1,20 @@
 <% if resource.errors.any? %>
-  <div id="error_explanation" data-turbo-cache="false">
-    <h2>
-      <%= I18n.t("errors.messages.not_saved",
-                 count: resource.errors.count,
-                 resource: resource.class.model_name.human.downcase)
-       %>
-    </h2>
-    <ul>
-      <% resource.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
+  <div id="error_explanation" data-turbo-cache="false" class="max-w-screen-sm m-auto mt-8 bg-red-50 rounded text-sm text-red-600 shadow">
+    <div class="flex gap-4 items-start p-4">
+      <%= heroicon "x-circle", variant: :solid, options: { class: "text-red-400" } %>
+      <div>
+          <h2 class="font-bold">
+          <%= I18n.t("errors.messages.not_saved",
+                    count: resource.errors.count,
+                    resource: resource.class.model_name.human.downcase)
+          %>
+          </h2>
+          <ul>
+            <% resource.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+    </div>
   </div>
 <% end %>

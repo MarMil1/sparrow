@@ -1,43 +1,30 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<div class="bg-steel-200 text-xl bold max-w-screen-sm m-auto text-center mb-8">
+    <h2>Edit profile</h2>
+</div>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+<%= render "users/form" %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+<%= render "form_edit_password", resource: resource, resource_name: resource_name %>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
+<div class="max-w-screen-sm m-auto pb-12">
+    <div class="rounded shadow mt-10">
+        <div class="text-red-600 text-lg p-4 bg-slate-100 font-semibold">
+            Delete account
+        </div>
 
-  <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-    <% if @minimum_password_length %>
-      <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
-    <% end %>
-  </div>
+        <div class="flex justify-between items-center bg-white">
+            <div class="w-1/2 text-[#101827] p-4 text-sm">
+                All of the data will be deleted. You will not be able to retrieve the account.
+            </div>
+            <div class="w-1/2 px-4 py-2 text-[#101827]">
+                <div class="float-right">
+                    <%= render 'shared/dialog_box', id: 'dialog-3', title: 'Delete account', content: 'Are you sure you want to delete the account? All of the data will be permanently removed. This action cannot be undone.' do %>
+                        <%= button_to "Cancel my account", registration_path(resource_name), data: { turbo_method: :delete }, class: "inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" %>
+                    <% end %>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>
+                    <button data-dialog-toggle="dialog-3" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Delete account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<div>

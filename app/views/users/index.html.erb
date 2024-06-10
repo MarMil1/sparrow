@@ -1,8 +1,8 @@
 <h1 class="text-xl bold">Users</h1>
 <div>
     <% if current_user %>
-    <table class="table-auto w-full text-sm text-left leading-5">
-        <thead class="text-xs border-b uppercase">
+    <table class="table-auto w-full text-sm text-left leading-5 bg-white rounded mt-8">
+        <thead class="text-xs uppercase bg-slate-100 rounded">
             <tr class="text-[#101827]">
                 <th scope="col" class="px-6 py-3">Email</th>
                 <th scope="col" class="px-6 py-3">Role</th>
@@ -11,7 +11,7 @@
         </thead>
         <% @users.each do |user| %>
             <tbody class="text-gray-500">
-                <tr class="border-b hover:bg-slate-100">
+                <tr class="border-b border-slate-100 hover:bg-[#f1f5f980]">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                         <%= link_to user_path(user) do %>
                             <div class="flex items-center gap-3">

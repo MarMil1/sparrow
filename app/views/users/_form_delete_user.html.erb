@@ -1,0 +1,21 @@
+<div class="max-w-screen-sm m-auto">
+    <div class="rounded shadow mt-10">
+        <div class="text-red-600 text-lg p-4 bg-slate-100 font-semibold">
+            Delete account
+        </div>
+        <div class="flex justify-between items-center bg-white">
+            <div class="w-1/2 text-[#101827] p-4 text-sm">
+                All of the data will be deleted. You will not be able to retrieve the account.
+            </div>
+            <div class="w-1/2 px-4 py-2 text-[#101827]">
+                <div class="float-right">
+                    <%= render 'shared/dialog_box', id: 'dialog-2', title: 'Delete account', content: 'Are you sure you want to delete the account? All of the data will be permanently removed. This action cannot be undone.' do %>
+                        <%= link_to "Delete account", user_path(@user), data: { turbo_method: :delete }, class: "inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" %>
+                    <% end %>
+
+                    <button data-dialog-toggle="dialog-2" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Delete account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
