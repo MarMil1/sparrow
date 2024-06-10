@@ -1,43 +1,64 @@
 <h1 class="text-xl bold">Users</h1>
 <div>
-    <% if current_user %>
+  <% if current_user %>
     <table class="table-auto w-full text-sm text-left leading-5 bg-white rounded shadow mt-8">
-        <thead class="text-xs uppercase bg-slate-100 rounded">
-            <tr class="text-[#101827]">
-                <th scope="col" class="px-6 py-3">Email</th>
-                <th scope="col" class="px-6 py-3">Role</th>
-                <th scope="col" class="px-6 py-3">Action</th>
-            </tr>
-        </thead>
+      <thead class="text-xs uppercase bg-slate-100 rounded">
+        <tr class="text-[#101827]">
+          <th scope="col" class="px-6 py-3">Email</th>
+          <th scope="col" class="px-6 py-3">Role</th>
+          <th scope="col" class="px-6 py-3">Action</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-500">
         <% @users.each do |user| %>
-            <tbody class="text-gray-500">
-                <tr class="border-b border-slate-100 hover:bg-[#f1f5f980]">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                        <%= link_to user_path(user) do %>
-                            <div class="flex items-center gap-3">
-                                <%= render "shared/user_blob", user: user %>
-                                <div>
-                                    <div><%= user.first_name.capitalize %> <%= user.last_name.capitalize %></div>
-                                    <div class="text-gray-500 font-normal"><%= user.email %></div>
-                                <div>
-                            </div>
+          <% unique_id = SecureRandom.hex(6) %>
+          <tr class="border-b border-slate-100 hover:bg-[#f1f5f980]">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+              
+                <div class="flex items-center gap-3 w-fit">
+                    <%= link_to user_path(user) do %>   
+                        <%= render "shared/user_blob", user: user %>
+                    <% end %>
+                    <%= link_to user_path(user) do %>
+                        <div>
+                            <div><%= user.first_name.capitalize %> <%= user.last_name.capitalize %></div>
+                            <div class="text-gray-500 font-normal"><%= user.email %></div>
+                        </div>
+                    <% end %>
+                    
+                </div>
+              
+            </th>
+            <td class="px-6 py-4">
+              <%= user.roles.pluck(:name).join(',').capitalize %>
+            </td>
+            <td class="px-6 py-4 w-fit">
+                <% content_for "toggle_dropdown_menu_#{unique_id}" do %>
+                  <%= heroicon "ellipsis-vertical" %>
+                <% end %>
+                <% content_for "menu_dropdown_menu_#{unique_id}" do %>
+                    <div class="bg-white flex flex-col shadow rounded">
+                        <a href="<%= user_path(user) %>" class="flex gap-2 py-2 px-5 text-[#101827] hover:bg-slate-200 text-sm">
+                            <%= heroicon "user" %> User profile
+                        </a>
+                        <a href="<%= edit_user_path(user) %>" class="flex gap-2 py-2 px-5 text-[#101827] hover:bg-slate-200 text-sm border-b-[1px] border-slate-200">
+                            <%= heroicon "pencil-square" %> Edit user
+                        </a>
+                        <%= render 'shared/dialog_box', id: "dialog-#{unique_id}", title: "Delete user #{user.first_name.capitalize} #{user.last_name.capitalize}", content: 'Are you sure you want to delete the account? All of the data will be permanently removed. This action cannot be undone.' do %>
+                            <%= link_to "Delete account", user_path(user), data: { turbo_method: :delete }, class: "inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" %>
                         <% end %>
-                        
-                    </th>
-                    <td class="px-6 py-4">
-                        <%= user.roles.pluck(:name).join(',').capitalize %>
-                    </td>
-                    <td class="px-6 py-4">
 
-                        <%= render 'shared/tooltip', position_class: tooltip_bottom_left, 
-                                                     tooltip_body: "Edit user account" do %>
-                            <a href="<%= edit_user_path(user) %>">
-                                <%= heroicon "ellipsis-vertical" %>
-                            </a>
-                        <% end %>
-                    </td>
-                </tr>
-            </tbody>
+                        <button data-dialog-toggle="dialog-<%= unique_id %>" class="flex gap-2 py-2 px-5 text-red-500 hover:bg-slate-200 text-sm">
+                            <%= heroicon "trash", options: { class: "text-red-500" } %> Delete user
+                        </button>
+                        
+                    </div>
+                <% end %>
+                <%= render 'shared/dropdown_menu', id: "dropdown-menu-#{unique_id}", toggle: "toggle_dropdown_menu_#{unique_id}", menu: "menu_dropdown_menu_#{unique_id}", class_names: "-left-[125px]" %>
+            </td>
+          </tr>
         <% end %>
-    <% end %>
+      </tbody>
+    </table>
+  <% end %>
 </div>
