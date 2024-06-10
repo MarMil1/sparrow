@@ -15,44 +15,36 @@
                 </div>
             </div>
         </div>
-        <div class="rounded border border-slate-300 mt-10">
-            <div class="text-[#101827] text-lg p-4 border-b font-semibold">
-                Contact info
+        <div class="rounded shadow mt-10">
+            <div class="text-[#101827] text-lg p-4 bg-slate-100 font-semibold">
+                User info
             </div>
-            <div class="flex justify-between items-center border-b">
+            <div class="flex justify-between items-center bg-white border-b border-slate-50">
                 <div class="w-1/2 text-[#101827] p-4 font-medium" >
                     First name
                 </div>
                 <div class="w-1/2 px-4 py-2 text-[#101827]">
-                    <%= f.text_field :first_name, class: "p-2 border rounded w-full" %>
+                    <%= f.text_field :first_name, class: "p-2 border border-slate-100 rounded w-full bg-slate-50 hover:bg-slate-100" %>
                 </div>
             </div>
-            <div class="flex justify-between items-center border-b">
+            <div class="flex justify-between items-center bg-white border-b border-slate-50">
                 <div class="w-1/2 text-[#101827] p-4 font-medium" >
                     Last name
                 </div>
                 <div class="w-1/2 px-4 py-2 text-[#101827]">
-                    <%= f.text_field :last_name, class: "p-2 border rounded w-full" %>
-                </div>
-            </div>
-            <div class="flex justify-between items-center border-b">
-                <div class="w-1/2 text-[#101827] p-4 font-medium" >
-                    Email address
-                </div>
-                <div class="w-1/2 px-4 py-2 text-[#101827]">
-                    <%= f.text_field :email, class: "p-2 border rounded w-full" %>
+                    <%= f.text_field :last_name, class: "p-2 border border-slate-100 rounded w-full bg-slate-50 hover:bg-slate-100" %>
                 </div>
             </div>
 
             <% if current_user.roles.first.name == 'admin' %>
-                <div class="flex justify-between items-center border-b">
+                <div class="flex justify-between items-center bg-white">
                     <div class="w-1/2 text-[#101827] p-4 font-medium">Role</div>
                     <div class="w-1/2 px-4 py-2 text-[#101827]">
                         <% unique_id = SecureRandom.hex(6) %>
                         <% selection_items = ['admin', 'staff', 'client'] %>
 
                         <% content_for :toggle_dropdown_selection_2 do %>
-                            <p id="toggle-<%= unique_id %>" type="button" class="inline-flex w-full justify-between border rounded bg-white px-3 py-2 text-[#101827] hover:bg-gray-50">
+                            <p id="toggle-<%= unique_id %>" type="button" class="inline-flex w-full justify-between border border-slate-100 rounded bg-slate-50 px-3 py-2 text-[#101827] hover:bg-slate-100">
                                 <%= @user.roles.first.name.capitalize %>
                                 <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                     <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
@@ -62,7 +54,7 @@
 
                         <% content_for :menu_dropdown_selection_2 do %>
                             <% selection_items.each do |selection_item| %>
-                                <p class="cursor-pointer p-2 hover:bg-gray-200" data-selection-item="<%= selection_item %>" data-selection-toggle-id="toggle-<%= unique_id %>" data-selection-hidden-id="selection-item-hidden-<%= unique_id %>">
+                                <p class="cursor-pointer p-2 hover:bg-slate-200" data-selection-item="<%= selection_item %>" data-selection-toggle-id="toggle-<%= unique_id %>" data-selection-hidden-id="selection-item-hidden-<%= unique_id %>">
                                     <%= selection_item.capitalize %>
                                 </p>
                             <% end %>
@@ -83,8 +75,7 @@
 
         <div class="mt-4 flex gap-4 justify-end items-center">
             <%= link_to "Cancel", user_path(@user), class: "mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto" %>
-            <%= f.button "Save Changes", class: "mt-3 inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-500 sm:mt-0 sm:w-auto" %>
+            <%= f.button "Update", class: "mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm bg-indigo-600 hover:bg-indigo-500 font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto" %>
         </div>
     <% end %>
-    <%= render "form_delete_user" %>
 </div>
