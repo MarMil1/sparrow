@@ -1,12 +1,16 @@
-<h1 class="text-xl bold">Users</h1>
-<div>
+<h1 class="text-xl bold">User management</h1>
+<div class="flex items-center justify-between">
+  <%= render "user_selection_menu" %>
+  <%= render "shared/invite_user_btn" %>
+</div>
+<div class="pb-12 mt-6">
   <% if current_user %>
     <table class="table-auto w-full text-sm text-left leading-5 bg-white rounded shadow mt-8">
       <thead class="text-xs uppercase bg-slate-100 rounded">
         <tr class="text-[#101827]">
           <th scope="col" class="px-6 py-3">Email</th>
           <th scope="col" class="px-6 py-3">Role</th>
-          <th scope="col" class="px-6 py-3">Action</th>
+          <th scope="col" class="px-6 py-3"></th>
         </tr>
       </thead>
       <tbody class="text-gray-500">
@@ -29,9 +33,11 @@
                 </div>
               
             </th>
+
             <td class="px-6 py-4">
               <%= user.roles.pluck(:name).join(',').capitalize %>
             </td>
+            
             <td class="px-6 py-4 w-fit">
                 <% content_for "toggle_dropdown_menu_#{unique_id}" do %>
                   <%= heroicon "ellipsis-vertical" %>

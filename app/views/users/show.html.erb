@@ -78,7 +78,9 @@
                 Last sign in
             </div>
             <div class="p-4 text-gray-400">
-                <%= @user.last_sign_in_at.to_fs(:long_ordinal) %>
+                <% if @user.last_sign_in_at? %>
+                    <%= @user.last_sign_in_at.to_fs(:long_ordinal) %>
+                <% end %>
             </div>
         </div>
     </div>

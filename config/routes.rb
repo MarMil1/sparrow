@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :users
+  resources :users do
+    collection do
+      get :invite, to: 'users#invite'
+      post :invite, to: 'users#send_invitation'
+      get :pending_invitations
+    end
+  end
  
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

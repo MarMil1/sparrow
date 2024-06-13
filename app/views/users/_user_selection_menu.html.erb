@@ -1,0 +1,33 @@
+<div class="mt-6">
+    <% content_for :toggle_dropdown_menu_2 do %>
+        <div class="p-2 border rounded bg-white flex items-center gap-2 text-sm">
+            <% if current_page?(users_path) %>
+                <div class="flex gap-2">
+                    <%= heroicon "users" %> All users
+                </div> 
+            <% else %>
+                <div class="flex gap-2">
+                    <%= heroicon "clock" %> Pending invitations
+                </div> 
+            <% end %>
+            <%= heroicon "chevron-down" %>
+        </div>
+    <% end %>
+    <% content_for :menu_dropdown_menu_2 do %>
+        <div class="flex flex-col text-sm w-max">
+            <a href="<%= users_path %>">
+                <div class="flex gap-2 items-center p-3 hover:bg-slate-100">
+                    <%= heroicon "users" %> 
+                    All users
+                </div>
+            </a>
+            <a href="<%= pending_invitations_users_path %>">
+                <div class="flex gap-2 items-center p-3 hover:bg-slate-100">
+                    <%= heroicon "clock" %> 
+                    Pending invitations
+                </div>
+            </a>
+        </div>
+    <% end %>
+    <%= render 'shared/dropdown_menu', id: "dropdown-menu-2", toggle: :toggle_dropdown_menu_2, menu: :menu_dropdown_menu_2, class_names: "bg-white" %>
+</div>

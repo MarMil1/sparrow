@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :update, :destroy]
-  before_action :check_user_role, only: [:index]
+  before_action :check_user_role, only: [:index, :invite, :pending_invitations]
+  before_action :require_admin_user_logged_in!, only: [:invite, :send_invitation, :pending_invitations]
 
   def index
     @users = User.all
@@ -39,6 +40,25 @@ class UsersController < ApplicationController
     else
       redirect_to user_session, alert: "You are not authorized to perform this action."
     end
+  end
+
+  def invite
+    @user = User.new
+  end
+
+  def send_invitation
+    @user = User.invite!(user_params.except(:role))
+    if @user.errors.empty?
+      @user.roles = [] # Clear any roles before assigning the new one
+      @user.add_role(user_params[:role])
+      redirect_to users_path, notice: 'User invitation sent successfully.'
+    else
+      render :invite
+    end
+  end
+
+  def pending_invitations
+    @pending_users = User.where(invitation_accepted_at: nil).where.not(invitation_token: nil)
   end
 
   private
