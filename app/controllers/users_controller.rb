@@ -74,6 +74,18 @@ class UsersController < ApplicationController
     @pending_users = User.where(invitation_accepted_at: nil).where.not(invitation_token: nil)
   end
 
+  def lock_user_account
+    @user = User.find(params[:id])
+    if @user.access_locked?
+      @user.unlock_access!
+      redirect_to (request.referrer || root_url), notice: "User account is unlocked."
+    else
+      @user.lock_access!
+      redirect_to (request.referrer || root_url), notice: "User account is locked."
+    end
+    
+  end
+
   private
 
   def set_user

@@ -8,7 +8,7 @@
     <table class="table-auto w-full text-sm text-left leading-5 bg-white rounded shadow mt-8">
       <thead class="text-xs uppercase bg-slate-100 rounded">
         <tr class="text-[#101827]">
-          <th scope="col" class="px-6 py-3">Email</th>
+          <th scope="col" class="px-6 py-3">Name</th>
           <th scope="col" class="px-6 py-3">Role</th>
           <th scope="col" class="px-6 py-3"></th>
         </tr>
@@ -24,10 +24,17 @@
                         <%= render "shared/user_blob", user: user %>
                     <% end %>
                     <%= link_to user_path(user) do %>
+                      <div class="flex gap-2 justify-between items-center">
                         <div>
-                            <div><%= user.first_name.capitalize %> <%= user.last_name.capitalize %></div>
-                            <div class="text-gray-500 font-normal"><%= user.email %></div>
+                          <%= user.first_name.capitalize %> <%= user.last_name.capitalize %>
                         </div>
+                        <% if user.access_locked? %>
+                          <div class="flex gap-1 items-center text-red-400 text-[0.65rem] px-1 py-0.5 bg-red-50 rounded-full">
+                            <%= heroicon "lock-closed", options: { class: "h-3 w-3", disable_default_class: true } %> Locked
+                          </div>
+                        <% end %>
+                      </div>
+                      <div class="text-gray-500 font-normal"><%= user.email %></div>
                     <% end %>
                     
                 </div>
@@ -44,12 +51,17 @@
                 <% end %>
                 <% content_for "menu_dropdown_menu_#{unique_id}" do %>
                     <div class="bg-white flex flex-col shadow rounded">
+
                         <a href="<%= user_path(user) %>" class="flex gap-2 py-2 px-5 text-[#101827] hover:bg-slate-200 text-sm">
                             <%= heroicon "user" %> User profile
                         </a>
-                        <a href="<%= edit_user_path(user) %>" class="flex gap-2 py-2 px-5 text-[#101827] hover:bg-slate-200 text-sm border-b-[1px] border-slate-200">
+
+                        <a href="<%= edit_user_path(user) %>" class="flex gap-2 py-2 px-5 text-[#101827] hover:bg-slate-200 text-sm">
                             <%= heroicon "pencil-square" %> Edit user
                         </a>
+
+                        <%= button_to lock_status(user), lock_user_account_user_path(user), method: :patch, class: "flex gap-2 py-2 px-5 text-[#101827] hover:bg-slate-200 text-sm border-b-[1px] border-slate-200" %>
+                            
                         <%= render 'shared/dialog_box', id: "dialog-#{unique_id}", title: "Delete user #{user.first_name.capitalize} #{user.last_name.capitalize}", content: 'Are you sure you want to delete the account? All of the data will be permanently removed. This action cannot be undone.' do %>
                             <%= link_to "Delete account", user_path(user), data: { turbo_method: :delete }, class: "inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" %>
                         <% end %>
