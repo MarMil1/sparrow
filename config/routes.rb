@@ -8,8 +8,7 @@ Rails.application.routes.draw do
     end
 
     member do
-      # TODO
-      # patch :lock_account
+      patch :lock_user_account
       patch :resend_invitation
     end
   end
