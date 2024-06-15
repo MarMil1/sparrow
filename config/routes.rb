@@ -6,6 +6,12 @@ Rails.application.routes.draw do
       post :invite, to: 'users#send_invitation'
       get :pending_invitations
     end
+
+    member do
+      # TODO
+      # patch :lock_account
+      patch :resend_invitation
+    end
   end
  
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

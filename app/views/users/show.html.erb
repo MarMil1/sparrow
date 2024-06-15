@@ -2,7 +2,7 @@
   <h1>Profile</h1>
 </div>
 
-<div class="max-w-screen-sm m-auto">
+<div class="max-w-screen-sm m-auto pb-12">
     <div class="flex justify-between items-center">
         <div class="flex justify-center items-center gap-4">
             <div class="w-fit">
@@ -80,8 +80,103 @@
             <div class="p-4 text-gray-400">
                 <% if @user.last_sign_in_at? %>
                     <%= @user.last_sign_in_at.to_fs(:long_ordinal) %>
+                <% else %>
+                    N/A
                 <% end %>
             </div>
         </div>
+        <div class="flex justify-between items-center bg-white">
+            <div class="text-[#101827] p-4 font-medium" >
+                Created by
+            </div>
+            <div class="p-4 text-gray-400">
+                <% if @user.created_by_invite? %>
+                    Invitation
+                <% elsif %>
+                    Registration
+                <% end %>
+            </div>
+        </div>
+        <% if @user.created_by_invite? %>
+            <div class="flex justify-between items-center bg-white">
+                <div class="text-[#101827] p-4 font-medium" >
+                    Account status
+                </div>
+                <div class="p-4 text-gray-400">
+                    <% if @user.invitation_accepted? %>
+                        <div class="text-green-600 bg-green-50 p-2 text-sm rounded-full border border-green-300 flex gap-1">
+                            <%= heroicon "check" %>Confirmed
+                        </div>
+                    <% elsif %>
+                        <div class="flex flex-col sm:flex-row gap-2 items-center"> 
+                            <div class="text-yellow-600 bg-yellow-50 p-2 text-sm rounded-full border border-yellow-300 flex gap-1">
+                                <%= heroicon "exclamation-triangle" %>Unconfirmed
+                            </div>
+                            <div>
+                                <%= button_to 'Resend confirmation', resend_invitation_user_path(@user), method: :patch, class: "font-semibold text-sm text-indigo-600 hover:text-indigo-500 cursor-pointer" %>
+                            </div>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        <% end %>
+        <% if @user.created_by_invite? %>
+            <div class="flex justify-between items-center bg-white">
+                <div class="text-[#101827] p-4 font-medium" >
+                    Invited by
+                </div>
+                <% if @user.invited_by %>
+                    <a href="<%= user_path(@user.invited_by) %>" class="p-4">   
+                        <div class="text-indigo-600 hover:text-indigo-500 cursor-pointer">
+                            <%= @user.invited_by.email %>
+                        </div>
+                    </a>
+                <% elsif %>
+                    <div class="p-4 text-gray-400">
+                        N/A
+                    </div>
+                <% end %>
+            </div>
+        <% end %>
     </div>
+    <% if @user.roles.first.name == 'admin' && current_user == @user %>
+        <div class="rounded shadow mt-10">
+            <div class="text-[#101827] text-lg p-4 bg-slate-100 font-semibold">
+                User invitations
+            </div>
+            <% if @user.invitations.count > 0 %>
+                <% @user.invitations.each do |invitation| %>
+                    <div class="p-3 flex justify-between items-center gap-6">
+                        <a href="<%= user_path(invitation) %>">
+                            <div class="flex justify-center items-center gap-4">
+                                <%= render "shared/user_blob", user: invitation %>
+                                <div>
+                                    <div class="font-semibold text-[#101827]">
+                                        <%= "#{invitation.first_name.capitalize} #{invitation.last_name.capitalize}" %>
+                                    </div>
+                                    <div class="text-gray-400">
+                                        <%= invitation.email %>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div>
+                            <%= render "shared/user_role_tag", user: invitation %>
+                        </div>
+                    </div>
+                <% end %>
+            <% else %>
+                <div class="p-3 flex flex-col items-center">
+                    <div class="p-4 text-gray-400 italic text-center">
+                        You have not invited anyone yet<br>
+                        Invite someone
+                    </div>
+                    <div class="p-4">
+                        <%= render "shared/invite_user_btn" %>
+                    </div>
+                </div>
+            <% end %>
+            
+        </div>
+    <% end %>
 </div>

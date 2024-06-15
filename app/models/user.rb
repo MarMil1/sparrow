@@ -7,6 +7,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :confirmable, :lockable, :trackable
 
+  has_many :invitations, class_name: 'User', as: :invited_by
+
   after_create :assign_default_role, unless: :invited?
 
   validates :first_name, :last_name, presence: true
