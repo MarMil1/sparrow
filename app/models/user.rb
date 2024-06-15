@@ -1,13 +1,15 @@
 class User < ApplicationRecord
   rolify
-  
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :confirmable, :lockable, :trackable
 
-  after_create :assign_default_role
+  has_many :invitations, class_name: 'User', as: :invited_by
+
+  after_create :assign_default_role, unless: :invited?
 
   validates :first_name, :last_name, presence: true
 
@@ -45,5 +47,9 @@ class User < ApplicationRecord
       return true if self.email == user_email && self.valid_password?(user_password)
     end
     false
+  end
+
+  def invited?
+    invitation_token.present?
   end
 end

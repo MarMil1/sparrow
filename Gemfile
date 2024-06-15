@@ -66,3 +66,5 @@ gem "devise", "~> 4.9"
 gem "rolify"
 
 gem "heroicon"
+
+gem 'devise_invitable'
