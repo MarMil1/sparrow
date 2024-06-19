@@ -1,78 +1,83 @@
-<h1 class="text-xl bold">User management</h1>
-<div class="flex items-center justify-between">
-  <%= render "user_selection_menu" %>
-  <%= render "shared/invite_user_btn" %>
-</div>
-<div class="pb-12 mt-6">
+<h1 class="text-xl font-bold mb-6">User management</h1>
+
+<div class="mt-6 border rounded-xl overflow-x-auto">
+  <div class="flex sm:flex-row flex-col md:items-center items-start justify-between p-4">
+    <%= render "user_selection_menu" %>
+    <%= render "shared/invite_user_btn" %>
+  </div>
   <% if current_user %>
-    <table class="table-auto w-full text-sm text-left leading-5 bg-white rounded shadow mt-8">
-      <thead class="text-xs uppercase bg-slate-100 rounded">
+    <table class="table-auto w-full text-sm text-left">
+      <thead class="text-xs uppercase border-b">
         <tr class="text-[#101827]">
-          <th scope="col" class="px-6 py-3">Name</th>
-          <th scope="col" class="px-6 py-3">Role</th>
-          <th scope="col" class="px-6 py-3"></th>
+          <th scope="col" class="px-4 py-2 md:px-6 md:py-3 rounded-tl-xl">Name</th>
+          <th scope="col" class="px-4 py-2 md:px-6 md:py-3">Role</th>
+          <th scope="col" class="px-4 py-2 md:px-6 md:py-3"></th>
+          <th scope="col" class="px-4 py-2 md:px-6 md:py-3 rounded-tr-xl"></th>
         </tr>
       </thead>
-      <tbody class="text-gray-500">
+      <tbody class="text-gray-500 divide-y">
         <% @users.each do |user| %>
           <% unique_id = SecureRandom.hex(6) %>
-          <tr class="border-b border-slate-100 hover:bg-[#f1f5f980]">
-            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-              
-                <div class="flex items-center gap-3 w-fit">
-                    <%= link_to user_path(user) do %>   
-                        <%= render "shared/user_blob", user: user %>
-                    <% end %>
-                    <%= link_to user_path(user) do %>
-                      <div class="flex gap-2 justify-between items-center">
-                        <div>
-                          <%= user.first_name.capitalize %> <%= user.last_name.capitalize %>
-                        </div>
-                        <% if user.access_locked? %>
-                          <div class="flex gap-1 items-center text-red-400 text-[0.65rem] px-1 py-0.5 bg-red-50 rounded-full">
-                            <%= heroicon "lock-closed", options: { class: "h-3 w-3", disable_default_class: true } %> Locked
-                          </div>
-                        <% end %>
-                      </div>
-                      <div class="text-gray-500 font-normal"><%= user.email %></div>
-                    <% end %>
-                    
-                </div>
-              
+          <tr>
+            <th scope="row" class="px-4 py-2 md:px-6 md:py-4 font-medium text-gray-900 whitespace-nowrap">
+              <div class="flex items-center gap-3 w-fit">
+                <%= link_to user_path(user) do %>   
+                    <%= render "shared/user_blob", user: user %>
+                <% end %>
+                <%= link_to user_path(user) do %>
+                  <div class="text-gray-900">
+                    <%= user.first_name.capitalize %> <%= user.last_name.capitalize %>
+                  </div>
+                  <div class="text-gray-500 font-normal"><%= user.email %></div>
+                <% end %>
+              </div>
             </th>
 
-            <td class="px-6 py-4">
+            <td class="px-4 py-2 md:px-6 md:py-4">
               <%= user.roles.pluck(:name).join(',').capitalize %>
             </td>
-            
-            <td class="px-6 py-4 w-fit">
-                <% content_for "toggle_dropdown_menu_#{unique_id}" do %>
-                  <%= heroicon "ellipsis-vertical" %>
-                <% end %>
-                <% content_for "menu_dropdown_menu_#{unique_id}" do %>
-                    <div class="bg-white flex flex-col shadow rounded">
 
-                        <a href="<%= user_path(user) %>" class="flex gap-2 py-2 px-5 text-[#101827] hover:bg-slate-200 text-sm">
-                            <%= heroicon "user" %> User profile
-                        </a>
-
-                        <a href="<%= edit_user_path(user) %>" class="flex gap-2 py-2 px-5 text-[#101827] hover:bg-slate-200 text-sm">
-                            <%= heroicon "pencil-square" %> Edit user
-                        </a>
-
-                        <%= button_to lock_status(user), lock_user_account_user_path(user), method: :patch, class: "flex gap-2 py-2 px-5 text-[#101827] hover:bg-slate-200 text-sm border-b-[1px] border-slate-200" %>
-                            
-                        <%= render 'shared/dialog_box', id: "dialog-#{unique_id}", title: "Delete user #{user.first_name.capitalize} #{user.last_name.capitalize}", content: 'Are you sure you want to delete the account? All of the data will be permanently removed. This action cannot be undone.' do %>
-                            <%= link_to "Delete account", user_path(user), data: { turbo_method: :delete }, class: "inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" %>
-                        <% end %>
-
-                        <button data-dialog-toggle="dialog-<%= unique_id %>" class="flex gap-2 py-2 px-5 text-red-500 hover:bg-slate-200 text-sm">
-                            <%= heroicon "trash", options: { class: "text-red-500" } %> Delete user
-                        </button>
-                        
+            <td class="pl-4 pr-2 py-2 md:pl-6 md:py-4 w-3">
+                <% if user.access_locked? %>
+                    <div class="text-red-500 text-[0.65rem] px-1 py-0.5">
+                      <%= render 'shared/tooltip', position_class: tooltip_bottom_left, tooltip_body: "User account is locked." do %>
+                        <%= heroicon "lock-closed", options: { class: "h-4 w-4", disable_default_class: true } %>
+                      <% end %>
                     </div>
-                <% end %>
-                <%= render 'shared/dropdown_menu', id: "dropdown-menu-#{unique_id}", toggle: "toggle_dropdown_menu_#{unique_id}", menu: "menu_dropdown_menu_#{unique_id}", class_names: "-left-[125px]" %>
+                  <% end %>
+            </td>
+            
+            <td class="pr-4 py-2 md:pr-6 md:py-4 w-3">                
+              <% content_for "toggle_dropdown_menu_#{unique_id}" do %>
+                <%= heroicon "ellipsis-horizontal" %>
+              <% end %>
+              <% content_for "menu_dropdown_menu_#{unique_id}" do %>
+                <div class="bg-white flex flex-col shadow rounded">
+                  <a href="<%= user_path(user) %>" class="flex gap-2 py-2 px-5 text-[#101827] hover:bg-slate-200 text-sm">
+                    <%= heroicon "user" %> View user
+                  </a>
+
+                  <a href="<%= edit_user_path(user) %>" class="flex gap-2 py-2 px-5 text-[#101827] hover:bg-slate-200 text-sm">
+                    <%= heroicon "pencil-square" %> Edit user
+                  </a>
+
+                  <%= render 'shared/dialog_box', id: "dialog-lock-toggle-dropdown-#{unique_id}", title: "#{lock_status_dialog_confirmation_title(user)}", content: lock_status_dialog_confirmation_content(user) do %>
+                    <%= button_to lock_status(user), lock_user_account_user_path(user), method: :patch, class: "inline-flex gap-2 w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" %>
+                  <% end %>
+                  <button data-dialog-toggle="dialog-lock-toggle-dropdown-<%=unique_id%>" class="flex gap-2 py-2 px-5 text-[#101827] hover:bg-slate-200 text-sm border-b whitespace-nowrap">
+                    <%= lock_status(user) %>
+                  </button>
+                  
+                  <%= render 'shared/dialog_box', id: "dialog-#{unique_id}", title: "Delete user #{user.first_name.capitalize} #{user.last_name.capitalize}", content: 'Are you sure you want to delete the account? All of the data will be permanently removed. This action cannot be undone.' do %>
+                    <%= link_to "Delete account", user_path(user), data: { turbo_method: :delete }, class: "inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" %>
+                  <% end %>
+                  <button data-dialog-toggle="dialog-<%= unique_id %>" class="flex gap-2 py-2 px-5 text-red-500 hover:bg-red-200 text-sm">
+                    <%= heroicon "trash", options: { class: "text-red-500" } %> Delete user
+                  </button>
+
+                </div>
+              <% end %>
+              <%= render 'shared/dropdown_menu', id: "dropdown-menu-#{unique_id}", toggle: "toggle_dropdown_menu_#{unique_id}", menu: "menu_dropdown_menu_#{unique_id}", class_names: "-left-[125px]" %>
             </td>
           </tr>
         <% end %>
