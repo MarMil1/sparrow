@@ -1,25 +1,31 @@
-<nav class="border-gray-200 mb-6 bg-white sticky top-0 z-50 border-b">
-    <div class="flex flex-wrap items-center justify-between mx-auto p-2.5">
-        <div class="flex items-center justify-between gap-2">
-            <div class="mr-8">
-                <%= link_to "Sparrow", root_path %>
-            </div>
+<div class="navbar bg-base-100 shadow">
+    <div class="flex-1">
+        <div class="mr-8">
+            <%= link_to "Sparrow", root_path %>
         </div>
-        <% if current_user %>
-            <div class="flex items-center justify-between gap-2">
-                <% content_for :toggle_dropdown_menu_1 do %>
-                    <%= render "shared/user_blob", user: current_user %>
-                <% end %>
+    </div>
 
-                <% content_for :menu_dropdown_menu_1 do %>
-                    <div class="border-b p-3 flex justify-center items-center gap-6">
-                        <div class="flex justify-center items-center gap-4">
+    <div class="flex-none">
+        <% if current_user %>
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="ring-primary ring-offset-base-100 w-8 rounded-full ring ring-offset-2">
+                        <img
+                        alt="Tailwind CSS Navbar component"
+                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                    </div>
+                </div>
+                <ul
+                tabindex="0"
+                class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 p-2 shadow">
+                    <div class="border-b p-2 flex justify-center items-center gap-4">
+                        <div class="flex justify-center items-center gap-3">
                             <%= render "shared/user_blob", user: current_user %>
                             <div>
-                                <div class="font-medium font-sm text-gray-900">
+                                <div class="font-medium font-sm">
                                     <%= "#{current_user.first_name.capitalize} #{current_user.last_name.capitalize}" %>
                                 </div>
-                                <div class="text-gray-400">
+                                <div class="opacity-50">
                                     <%= current_user.email %>
                                 </div>
                             </div>
@@ -28,47 +34,63 @@
                             <%= render "shared/user_role_tag", user: current_user %>
                         </div>
                     </div>
-
-                    <a href="<%= root_path %>">
-                        <div class="p-3 hover:bg-slate-200">
-                            <div class="text-gray-500 text-sm flex gap-2 items-center">
-                                <%= heroicon "home" %> Dashboard
-                            </div>
-                        </div>
-                    </a>
-                    <% if current_user.roles.first.name == "admin" %>
-                        <a href="<%= users_path %>">
-                            <div class="p-3 hover:bg-slate-200">
-                                <div class="text-gray-500 text-sm flex gap-2 items-center">
-                                    <%= heroicon "users" %> Users
-                                </div>
+                    <li class="mt-2">
+                        <a href="<%= root_path %>">
+                            <div class="py-1.5 flex gap-2 items-center">
+                            <%= heroicon "home" %> Dashboard
                             </div>
                         </a>
-                    <% end %>
-                    <a href="<%= user_path(current_user) %>">
-                        <div class="border-b p-3 hover:bg-slate-200">
-                            <div class="text-gray-500 text-sm flex gap-2 items-center">
+                    </li>
+                    <li>
+                        <% if current_user.roles.first.name == "admin" %>
+                            <a href="<%= users_path %>">
+                                <div class="py-1.5 flex gap-2 items-center">
+                                    <%= heroicon "users" %> Users
+                                </div>
+                            </a>
+                        <% end %>
+                    </li>
+                    <li class="border-b mb-2">
+                        <a href="<%= user_path(current_user) %>" class="mb-2">
+                            <div class="py-1.5 flex gap-2 items-center">
                                 <%= heroicon "user" %> Profile & account
                             </div>
-                        </div>
-                    </a>
-                    <div class="group border-b">
-                        <div class="text-gray-500 text-sm">
-                            <%= render 'shared/dialog_box', id: 'dialog-1', title: 'Logout', content: 'Are you sure you want to logout?' do %>
-                                <%= button_to destroy_user_session_path, method: :delete, class: "inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" do %>
-                                    Logout
-                                <% end %>
-                            <% end %>
+                        </a>
+                    </li>
+                    <li>
+                        <button class="py-2.5 flex gap-2 items-center" onclick="logout_modal_1.showModal()">
+                            <%= heroicon "arrow-up-tray", options: { class: "rotate-90" } %> Sign Out
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        <% end %>
+    </div>
+</div>
 
-                            <button data-dialog-toggle="dialog-1" class="p-3 group-hover:bg-red-200 text-red-500 w-full text-left flex gap-2 items-center">
-                                <%= heroicon "arrow-up-tray", options: { class: "rotate-90" } %> Logout
-                            </button>
-                        </div>
-                    </div>
-                <% end %>
-                <%= render 'shared/dropdown_menu', id: "dropdown-menu-1", toggle: :toggle_dropdown_menu_1, menu: :menu_dropdown_menu_1, class_names: "right-0 bg-white" %>
-                </div>
+<dialog id="logout_modal_1" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <div class="flex gap-3 items-start">
+            <div class="p-2 bg-red-100 rounded-full">
+                <%= heroicon "exclamation-triangle", options: { class: "text-error" } %>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold">Sign out</h3>
+                <p class="py-2">Are you sure you want to sign out?</p>
+            </div>
+        </div>
+        <div class="modal-action">
+            <!-- Form for logging out -->
+            <%= form_with url: destroy_user_session_path, method: :delete do %>
+                <button type="button" class="btn btn-sm" onclick="document.getElementById('logout_modal_1').close();">
+                    Stay signed in
+                </button>
+                <%= submit_tag "Sign out", class: "btn btn-error btn-sm" %>
             <% end %>
         </div>
     </div>
-</nav>
+    <div class="modal-backdrop" onclick="document.getElementById('logout_modal_1').close();"></div>
+</dialog>

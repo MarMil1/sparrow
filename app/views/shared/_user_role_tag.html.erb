@@ -1,13 +1,13 @@
 <% if user.roles.first.name == "admin" %>
-    <div class="text-[0.85rem] text-purple-500 px-2 py-1 bg-purple-100 rounded-xl capitalize">
-        <%= user.roles.pluck(:name).join(', ') %>
+    <div class="badge badge-primary">
+        <%= user.roles.pluck(:name).join(', ').capitalize %>
     </div>
 <% elsif user.roles.first.name == "staff" %>
-    <div class="text-[0.85rem] text-amber-500 px-2 py-1 bg-amber-100 rounded-xl capitalize">
-        <%= user.roles.pluck(:name).join(', ') %>
+    <div class="badge badge-secondary">
+        <%= user.roles.pluck(:name).join(', ').capitalize %>
     </div>
 <% else %>
-    <div class="text-[0.85rem] text-emerald-500 px-2 py-1 bg-emerald-100 rounded-xl capitalize">
-        <%= user.roles.pluck(:name).join(', ') %>
+    <div class="badge badge-accent">
+        <%= user.roles.pluck(:name).join(', ').capitalize %>
     </div>
 <% end %>

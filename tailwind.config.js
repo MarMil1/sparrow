@@ -6,4 +6,8 @@ module.exports = {
     "./app/javascript/**/*.js",
     "./config/initializers/heroicon.rb",
   ],
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: ["light", "dark"],
+  },
 };

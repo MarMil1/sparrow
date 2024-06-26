@@ -68,3 +68,5 @@ gem "rolify"
 gem "heroicon"
 
 gem 'devise_invitable'
+
+gem "webpacker", "~> 5.4"

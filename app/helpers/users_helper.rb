@@ -9,17 +9,17 @@ module UsersHelper
 
     def lock_status_dialog_confirmation_title(user)
         if user.access_locked?
-            "Unlock user #{user.email}"
+            "Unlock user"
         else
-            "Lock user #{user.email}"
+            "Lock user"
         end
     end
 
     def lock_status_dialog_confirmation_content(user)
         if user.access_locked?
-            "Are you sure you want to unlock this user account?"
+            "You are about to unlock this user account.<br>Are you sure?".html_safe
         else
-            "Are you sure you want to lock this user account?"
+            "You are about to lock this user account.<br>Are you sure?".html_safe
         end
     end
 end

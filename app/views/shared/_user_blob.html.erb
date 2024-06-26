@@ -1,19 +1,24 @@
 <% if user.roles.first.name == "admin" %>
-    <div class="rounded-full border border-2 border-purple-400 bg-slate-200 font-semibold text-[#101827]">
-        <div class="border border-2 border-white p-2 rounded-full">
-            <%= "#{user.first_name[0].capitalize}#{user.last_name[0].capitalize}" %>
+    <div class="avatar">
+        <div class="ring-primary ring-offset-base-100 w-8 rounded-full ring ring-offset-2">
+            <%
+=begin%>
+ <%= "#{user.first_name[0].capitalize}#{user.last_name[0].capitalize}" %> 
+<%
+=end%>
+            <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
         </div>
     </div>
 <% elsif user.roles.first.name == "staff" %>
-    <div class="rounded-full border border-2 border-amber-400 bg-slate-200 font-semibold text-[#101827]">
-        <div class="border border-2 border-white p-2 rounded-full">
-            <%= "#{user.first_name[0].capitalize}#{user.last_name[0].capitalize}" %>
+    <div class="avatar">
+        <div class="ring-secondary ring-offset-base-100 w-8 rounded-full ring ring-offset-2">
+            <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
         </div>
     </div>
 <% else %>
-    <div class="rounded-full border border-2 border-emerald-400 bg-slate-200 font-semibold text-[#101827]">
-        <div class="border border-2 border-white p-2 rounded-full">
-            <%= "#{user.first_name[0].capitalize}#{user.last_name[0].capitalize}" %>
+    <div class="avatar">
+        <div class="ring-accent ring-offset-base-100 w-8 rounded-full ring ring-offset-2">
+            <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
         </div>
     </div>
 <% end %>
