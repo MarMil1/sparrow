@@ -27,6 +27,11 @@ class User < ApplicationRecord
     self.roles = [Role.find_by(name: role_name)]
   end
 
+  # Define available roles
+  def self.available_roles
+    %w[admin staff client]
+  end
+
   private
 
   def admin_user_credentials_valid?

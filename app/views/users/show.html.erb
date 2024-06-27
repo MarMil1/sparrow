@@ -1,187 +1,338 @@
-<h1 class="text-xl font-bold mb-6">Profile</h1>
+<h1 class="text-xl font-bold ml-4 mb-6">Profile</h1>
 
-<div class="max-w-screen-sm pb-12">
-    <div class="flex justify-between items-center">
-        <div class="flex justify-center items-center gap-4">
-            <div class="w-fit">
-                <%= render "shared/user_blob", user: @user %>
+<div class="max-w-screen-full pb-12">
+    <div class="w-fit ml-4">
+        <%= render "shared/user_blob", user: @user %>
+    </div>
+    <div class="mt-10">
+        <div class="p-4 border-b flex justify-between">
+            <div>
+                <h3 class="text-base font-semibold leading-7">Info</h3>
+                <p class="mt-1 max-w-2xl text-sm leading-6 opacity-60">Personal details and information.</p>
+            </div>
+            <% if current_user == @user %>
+                <a href="<%= edit_user_registration_path %>">
+                    <div class="tooltip tooltip-left" data-tip="Edit user profile.">
+                        <button class="btn btn-sm btn-primary">
+                            <%= heroicon "pencil-square" %>
+                        </button>
+                    </div>
+                </a>
+            <% elsif current_user.roles.first.name == 'admin' && current_user != @user %>
+                <a href="<%= edit_user_path(@user) %>">
+                    <div class="tooltip tooltip-left" data-tip="Edit user profile.">
+                        <button class="btn btn-sm btn-primary">
+                            <%= heroicon "pencil-square" %>
+                        </button>
+                    </div>
+                </a>
+            <% end %>
+        </div>
+        <div class="mt-6">
+        <dl class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+
+            <div class="p-4">
+                <dt class="text-sm font-medium leading-6 flex gap-2">
+                    <span>First name</span>
+                    <span class="link link-primary opacity-50" onclick="editField('first_name')"><%= heroicon "pencil-square" %></span>
+                </dt>
+                <dd id="first_name_display" class="mt-1 text-sm leading-6 opacity-60 sm:mt-0"><%= @user.first_name.capitalize %></dd>
+                <div id="first_name_edit" class="hidden">
+                    <form id="first_name_form" action="<%= user_path(@user) %>" method="post" data-remote="true">
+                        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                        <%= hidden_field_tag '_method', 'patch' %>
+                        <%= text_field_tag 'user[first_name]', @user.first_name, class: "input input-sm input-bordered w-full mb-2 mt-2" %>
+                        <button type="submit" class="btn btn-xs btn-primary">Save</button>
+                        <button type="button" class="btn btn-xs" onclick="cancelEdit('first_name')">Cancel</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="p-4">
+                <dt class="text-sm font-medium leading-6 flex gap-2">
+                    <span>Last name</span>
+                    <span class="link link-primary opacity-50" onclick="editField('last_name')"><%= heroicon "pencil-square" %></span>
+                </dt>
+                <dd id="last_name_display" class="mt-1 text-sm leading-6 opacity-60 sm:mt-0"><%= @user.last_name.capitalize %></dd>
+                <div id="last_name_edit" class="hidden">
+                    <form id="last_name_form" action="<%= user_path(@user) %>" method="post" data-remote="true">
+                        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                        <%= hidden_field_tag '_method', 'patch' %>
+                        <%= text_field_tag 'user[last_name]', @user.last_name, class: "input input-sm input-bordered w-full mb-2 mt-2" %>
+                        <button type="submit" class="btn btn-xs btn-primary">Save</button>
+                        <button type="button" class="btn btn-xs" onclick="cancelEdit('last_name')">Cancel</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="p-4">
+                <dt class="text-sm font-medium leading-6 flex gap-2">
+                    <span>Email address</span>
+                    <% if current_user == @user %>
+                        <a href="<%= edit_user_registration_path %>">
+                            <span class="link link-primary opacity-50"><%= heroicon "pencil-square" %></span>
+                        </a>
+                    <% end %>
+                </dt>
+                <dd class="mt-1 text-sm leading-6 opacity-60 sm:mt-0"><%= @user.email %></dd>
+            </div>
+            <div class="p-4">
+                <dt class="text-sm font-medium leading-6">Role</dt>
+                <dd class="mt-1 text-sm leading-6 sm:mt-0 flex gap-2">
+                    <% if current_user.roles.first.name == 'admin' && current_user != @user %>
+                        <div class="dropdown dropdown-end">
+                            <button class="btn btn-sm btn-<%= user_role_color(@user) %> btn-outline">
+                                <%= render "shared/user_role_tag", user: @user %>
+                                <%= heroicon "chevron-down" %>
+                            </button>
+                            <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                                <% User.available_roles.each do |role| %>
+                                    <li>
+                                        <%= form_with(model: @user, url: user_path(@user), method: :patch, class: "inline") do |f| %>
+                                            <%= f.hidden_field :role, value: role %>
+                                            <button type="submit" class="cursor-pointer w-full text-left">
+                                                <div class="flex justify-between items-center">
+                                                    <span><%= role.capitalize %></span>
+                                                    <% if @user.has_role?(role) %>
+                                                        <%= heroicon "check", options: { class: "w-4 h-4 text-success" } %>
+                                                    <% end %>
+                                                </div>
+                                            </button>
+                                        <% end %>
+                                    </li>
+                                <% end %>
+                            </ul>
+                        </div>
+                    <% else %>
+                        <%= render "shared/user_role_tag", user: @user %>
+                    <% end %>
+                </dd>
+            </div>
+        </dl>
+        </div>
+    </div>
+    <div class="mt-10">
+        <div class="p-4 border-b flex justify-between">
+            <div>
+                <h3 class="text-base font-semibold leading-7">Activity</h3>
+                <p class="mt-1 max-w-2xl text-sm leading-6 opacity-60">Activity details and status.</p>
             </div>
             <div>
-                <div class="flex gap-2 justify-between items-center">
-                    <div class="font-medium font-sm">
-                        <%= @user.first_name.capitalize %> <%= @user.last_name.capitalize %>
-                    </div>
-                    <% if @user.access_locked? %>
-                        <div class="flex gap-1 items-center text-red-400 text-[0.65rem] px-1 py-0.5 bg-red-100 rounded-full">
-                        <%= heroicon "lock-closed", options: { class: "h-3 w-3", disable_default_class: true } %> Locked
+                <% if @user.access_locked? %>
+                    <% if current_user.roles.first.name == 'admin' && current_user != @user %>
+                        <div class="tooltip tooltip-left" data-tip="Unlock user account.">
+                            <button class="btn btn-success btn-sm" onclick="lock_user_modal_show_1<%=@user.id%>.showModal()">
+                                <%= heroicon "lock-open" %>
+                            </button>
                         </div>
                     <% end %>
-                </div>
-                <div class="text-gray-400 text-sm">
-                    Joined on <%= @user.created_at.to_fs(:long_ordinal) %>
-                </div>
-            </div>
-        </div>
-        <% if current_user == @user %>
-            <%= link_to "Edit profile", edit_user_registration_path, class: "mt-3 inline-flex w-fit justify-center rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto" %>
-        <% elsif current_user.roles.first.name == 'admin' && current_user != @user %>
-            <%= link_to "Edit profile", edit_user_path(@user), class: "mt-3 inline-flex w-fit justify-center rounded-md bg-indigo-600 hover:bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto" %> 
-        <% end %>
-    </div>
-    <div class="rounded mt-10 border">
-        <div class="text-[#101827] text-lg p-4 font-semibold ">
-            Contact info
-        </div>
-        <div class="flex justify-between items-center border-b">
-            <div class="text-[#101827] p-4 font-medium" >
-                First name
-            </div>
-            <div class="p-4 text-gray-400">
-                <%= @user.first_name.capitalize %>
-            </div>
-        </div>
-        <div class="flex justify-between items-center border-b">
-            <div class="text-[#101827] p-4 font-medium" >
-                Last name
-            </div>
-            <div class="p-4 text-gray-400">
-                <%= @user.last_name.capitalize %>
-            </div>
-        </div>
-        <div class="flex justify-between items-center border-b">
-            <div class="text-[#101827] p-4 font-medium" >
-                Email address
-            </div>
-            <div class="p-4 text-gray-400">
-                <%= @user.email %>
-            </div>
-        </div>
-        <div class="flex justify-between items-center">
-            <div class="text-[#101827] p-4 font-medium" >
-                Role
-            </div>
-            <div class="p-4 text-gray-400 capitalize">
-                <%= @user.roles.pluck(:name).join(', ') %>
-            </div>
-        </div>
-    </div>
-
-    <div class="rounded border mt-10">
-        <div class="text-[#101827] text-lg p-4 font-semibold">
-            User activity
-        </div>
-        <div class="flex justify-between items-center border-b">
-            <div class="text-[#101827] p-4 font-medium" >
-                Joined on
-            </div>
-            <div class="p-4 text-gray-400">
-                <%= @user.created_at.to_fs(:long_ordinal) %>
-            </div>
-        </div>
-        <div class="flex justify-between items-center border-b">
-            <div class="text-[#101827] p-4 font-medium" >
-                Last sign in
-            </div>
-            <div class="p-4 text-gray-400">
-                <% if @user.last_sign_in_at? %>
-                    <%= @user.last_sign_in_at.to_fs(:long_ordinal) %>
                 <% else %>
-                    N/A
-                <% end %>
-            </div>
-        </div>
-        <div class="flex justify-between items-center bg-white border-b">
-            <div class="text-[#101827] p-4 font-medium" >
-                Created by
-            </div>
-            <div class="p-4 text-gray-400">
-                <% if @user.created_by_invite? %>
-                    Invitation
-                <% elsif %>
-                    Registration
-                <% end %>
-            </div>
-        </div>
-        <% if @user.created_by_invite? %>
-            <div class="flex justify-between items-center bg-white border-b">
-                <div class="text-[#101827] p-4 font-medium" >
-                    Invitation status
-                </div>
-                <div class="p-4 text-gray-400">
-                    <% if @user.invitation_accepted? %>
-                        <div class="text-green-600 bg-green-100 px-2 py-1 text-sm rounded-full flex gap-1">
-                            <%= heroicon "check" %>Confirmed
-                        </div>
-                    <% elsif %>
-                        <div class="flex flex-col sm:flex-row gap-2 items-center"> 
-                            <div class="text-yellow-600 bg-yellow-100 px-2 py-1 text-sm rounded-full flex gap-1">
-                                <%= heroicon "exclamation-triangle" %>Unconfirmed
-                            </div>
-                            <div>
-                                <%= button_to 'Resend invitation', resend_invitation_user_path(@user), method: :patch, class: "font-semibold text-sm text-indigo-600 hover:text-indigo-500 cursor-pointer" %>
-                            </div>
+                    <% if current_user.roles.first.name == 'admin' && current_user != @user %>
+                        <div class="tooltip tooltip-left" data-tip="Lock user account.">
+                            <button class="btn btn-error btn-sm" onclick="lock_user_modal_show_1<%=@user.id%>.showModal()">
+                                <%= heroicon "lock-closed" %>
+                            </button>
                         </div>
                     <% end %>
-                </div>
-            </div>
-        <% end %>
-        <% if @user.created_by_invite? %>
-            <div class="flex justify-between items-center bg-white">
-                <div class="text-[#101827] p-4 font-medium" >
-                    Invited by
-                </div>
-                <% if @user.invited_by %>
-                    <a href="<%= user_path(@user.invited_by) %>" class="p-4">   
-                        <div class="text-indigo-600 hover:text-indigo-500 cursor-pointer">
-                            <%= @user.invited_by.email %>
-                        </div>
-                    </a>
-                <% elsif %>
-                    <div class="p-4 text-gray-400">
-                        N/A
-                    </div>
                 <% end %>
             </div>
-        <% end %>
-    </div>
-    <% if @user.roles.first.name == 'admin' && current_user == @user %>
-        <div class="rounded border mt-10">
-            <div class="text-[#101827] text-lg p-4 font-semibold">
-                User invitations
-            </div>
-            <% if @user.invitations.count > 0 %>
-                <% @user.invitations.each do |invitation| %>
-                    <div class="p-3 flex justify-between items-center gap-6 border-b">
-                        <a href="<%= user_path(invitation) %>">
-                            <div class="flex justify-center items-center gap-4">
-                                <%= render "shared/user_blob", user: invitation %>
+        </div>
+        <div class="mt-6">
+            <dl class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+                <div class="px-4 py-6">
+                    <dt class="text-sm font-medium leading-6">Joined on</dt>
+                    <dd class="mt-1 text-sm leading-6 opacity-60 sm:mt-0"><%= @user.created_at.to_fs(:long_ordinal) %></dd>
+                </div>
+                <div class="p-4">
+                    <dt class="text-sm font-medium leading-6">Last sign in</dt>
+                    <dd class="mt-1 text-sm leading-6 opacity-60 sm:mt-0">
+                        <% if @user.last_sign_in_at? %>
+                            <%= @user.last_sign_in_at.to_fs(:long_ordinal) %>
+                        <% else %>
+                            N/A
+                        <% end %>
+                    </dd>
+                </div>
+                <div class="p-4">
+                    <dt class="text-sm font-medium leading-6">Created via</dt>
+                    <dd class="mt-1 text-sm leading-6 opacity-60 sm:mt-0">
+                        <% if @user.created_by_invite? %>
+                            Invitation
+                        <% else %>
+                            Registration
+                        <% end %>
+                    </dd>
+                </div> 
+                <div class="p-4">
+                    <dt class="text-sm font-medium leading-6">Locked</dt>
+                    <div class="flex gap-2 items-center">
+                        <% if @user.access_locked? %>
+                            <dd class="mt-1 badge badge-outline badge-error gap-2">
+                                <%= heroicon "lock-closed", options: { class: "h-4 w-4", disable_default_class: true } %> Locked
+                            </dd>
+                        <% else %>
+                            <dd class="mt-1 badge badge-outline badge-success gap-2">
+                                <%= heroicon "lock-open", options: { class: "h-4 w-4", disable_default_class: true } %> Unlocked
+                            </dd>
+                        <% end %>
+                    </div>
+                </div>
+                <% if @user.created_by_invite? %>
+                <div class="p-4">
+                    <dt class="text-sm font-medium leading-6">Invitation status</dt>
+                    <dd class="mt-1 text-sm leading-6 sm:mt-0">
+                        <% if @user.invitation_accepted? %>
+                            <div class="badge badge-success p-3 gap-2 mt-1">
+                                <%= heroicon "check" %> Accepted
+                            </div>
+                        <% else %>
+                            <div class="flex gap-2 items-center mt-1"> 
+                                <div class="badge badge-warning p-3 gap-2 whitespace-nowrap">
+                                    <%= heroicon "exclamation-triangle" %> Not accepted
+                                </div>
                                 <div>
-                                    <div class="font-medium font-sm text-gray-900">
-                                        <%= "#{invitation.first_name.capitalize} #{invitation.last_name.capitalize}" %>
-                                    </div>
-                                    <div class="text-gray-400">
-                                        <%= invitation.email %>
-                                    </div>
+                                    <%= button_to 'Resend invitation', resend_invitation_user_path(@user), method: :patch, class: "font-semibold text-sm text-indigo-600 hover:text-indigo-500 cursor-pointer" %>
                                 </div>
                             </div>
-                        </a>
-                        <div>
-                            <%= render "shared/user_role_tag", user: invitation %>
-                        </div>
-                    </div>
-                <% end %>
-            <% else %>
-                <div class="p-3 flex flex-col items-center">
-                    <div class="p-4 text-gray-400 italic text-center">
-                        You have not invited anyone yet<br>
-                        Invite someone
-                    </div>
-                    <div class="p-4">
-                        <%= render "shared/invite_user_btn" %>
-                    </div>
+                        <% end %>
+                    </dd>
                 </div>
+                <div class="p-4">
+                    <dt class="text-sm font-medium leading-6 text-gray-900">Invited by</dt>
+                    <dd class="mt-1 text-sm">
+                    <% if @user.invited_by %>
+                        <a href="<%= user_path(@user.invited_by) %>" class="flex mt-1 ml-1">
+                            <%= render "shared/user_blob", user: @user.invited_by %>
+                        </a>
+                    <% else %>
+                        N/A
+                    <% end %>
+                    </dd>
+                </div>
+                <% end %>
+            </dl>
+        </div>
+    </div>
+    <% if @user.roles.first.name == 'admin' %>
+        <div class="mt-10">
+        <div class="p-4 border-b flex justify-between items-start">
+            <div>
+                <h3 class="text-base font-semibold leading-7">Invitations</h3>
+                <p class="mt-1 max-w-2xl text-sm leading-6 opacity-60">List of users invited by you.</p>
+            </div>
+            <div>
+                <%= render "shared/invite_user_btn" %>
+            </div>
+        </div>
+        <div class="mt-6 border rounded-xl overflow-x-auto">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Invited on</th>
+                        <th>Accepted on</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @user.invitations.each do |invitation| %>
+                        <tr>
+                            <td class="whitespace-nowrap">
+                                <a href="<%= user_path(invitation) %>" class="flex">
+                                    <%= render "shared/user_blob", user: invitation %>
+                                </a>
+                            </td>
+
+                            <td class="whitespace-nowrap">
+                                <%= render "shared/user_role_tag", user: invitation %>
+                            </td>
+
+                            <td class="whitespace-nowrap opacity-50">
+                                <%= invitation.invitation_sent_at.to_fs(:long_ordinal) %>
+                            </td>
+
+                            <td class="whitespace-nowrap">
+                                <% if invitation.invitation_accepted? %>
+                                    <span class="opacity-50"><%= invitation.invitation_accepted_at.to_fs(:long_ordinal) %></span>
+                                <% else %>
+                                    <div class="flex gap-2 items-center mt-1"> 
+                                        <div class="badge badge-warning p-3 gap-2">
+                                            <%= heroicon "exclamation-triangle" %> Not accepted
+                                        </div>
+                                        <div>
+                                            <%= button_to 'Resend invitation', resend_invitation_user_path(@user), method: :patch, class: "font-semibold text-sm text-indigo-600 hover:text-indigo-500 cursor-pointer" %>
+                                        </div>
+                                    </div>
+                                <% end %>
+                            </td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+            <% if @user.invitations.count == 0 %>
+            <div class="p-4 opacity-50 text-sm text-center">
+                No user invitations found
+            </div>
             <% end %>
-            
+        </div>
         </div>
     <% end %>
 </div>
+
+<!-- Dialog modal for LOCK/UNLOCK user -->
+<dialog id="lock_user_modal_show_1<%=@user.id%>" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" 
+            onclick="document.getElementById('lock_user_modal_show_1<%=@user.id%>').close();">✕</button>
+        </form>
+        <div class="flex gap-3 items-start">
+            <div class="p-2 bg-red-100 rounded-full">
+            <%= heroicon "exclamation-triangle", options: { class: "text-error" } %>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold"><%= lock_status_dialog_confirmation_title(@user) %></h3>  
+                <p class="py-2"><%= lock_status_dialog_confirmation_content(@user) %></p>
+                <p class="link link-primary no-underline cursor-default">
+                    <%= @user.first_name.capitalize %> <%= @user.last_name.capitalize %>
+                </p>
+            </div>
+        </div>
+        <div class="modal-action">
+            <%= form_with url: lock_user_account_user_path(@user), method: :patch, class: "flex gap-2" do %>
+                <button type="button" class="btn btn-sm" onclick="document.getElementById('lock_user_modal_show_1<%=@user.id%>').close();">
+                    Cancel
+                </button>
+                <%= button_tag lock_status(@user).html_safe, class: "btn btn-error btn-sm" %>
+            <% end %>
+        </div>
+    </div>
+    <div class="modal-backdrop" onclick="document.getElementById('lock_user_modal_show_1<%=@user.id%>').close();"></div>
+</dialog>
+
+<script>
+    document.addEventListener("turbo:load", () => {
+        function editField(field) {
+            document.getElementById(`${field}_display`).classList.add('hidden');
+            document.getElementById(`${field}_edit`).classList.remove('hidden');
+        }
+
+        function cancelEdit(field) {
+            document.getElementById(`${field}_display`).classList.remove('hidden');
+            document.getElementById(`${field}_edit`).classList.add('hidden');
+        }
+
+        window.editField = editField;
+        window.cancelEdit = cancelEdit;
+    });
+
+    document.addEventListener('ajax:success', function(event) {
+        const [data, status, xhr] = event.detail;
+        if (data.field && data.value) {
+            const displayElement = document.getElementById(`${data.field}_display`);
+            displayElement.textContent = data.value;
+            displayElement.classList.remove('hidden');
+            document.getElementById(`${data.field}_edit`).classList.add('hidden');
+        }
+    });
+</script>

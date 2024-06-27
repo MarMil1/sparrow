@@ -9,7 +9,7 @@
         <% if current_user %>
             <div class="dropdown dropdown-end">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                    <div class="ring-primary ring-offset-base-100 w-8 rounded-full ring ring-offset-2">
+                    <div class="ring-<%= user_role_color(current_user) %> ring-offset-base-100 w-8 rounded-full ring ring-offset-2">
                         <img
                         alt="Tailwind CSS Navbar component"
                         src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
@@ -19,20 +19,8 @@
                 tabindex="0"
                 class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 p-2 shadow">
                     <div class="border-b p-2 flex justify-center items-center gap-4">
-                        <div class="flex justify-center items-center gap-3">
-                            <%= render "shared/user_blob", user: current_user %>
-                            <div>
-                                <div class="font-medium font-sm">
-                                    <%= "#{current_user.first_name.capitalize} #{current_user.last_name.capitalize}" %>
-                                </div>
-                                <div class="opacity-50">
-                                    <%= current_user.email %>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <%= render "shared/user_role_tag", user: current_user %>
-                        </div>
+                        <%= render "shared/user_blob", user: current_user %>
+                        <%= render "shared/user_role_tag", user: current_user %>
                     </div>
                     <li class="mt-2">
                         <a href="<%= root_path %>">

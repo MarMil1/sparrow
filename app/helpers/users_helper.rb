@@ -22,4 +22,14 @@ module UsersHelper
             "You are about to lock this user account.<br>Are you sure?".html_safe
         end
     end
+
+    def user_role_color(user)
+        if user.roles.first.name == 'admin'
+            "primary"
+        elsif user.roles.first.name == 'staff'
+            "secondary"
+        else
+            "accent"
+        end
+    end
 end

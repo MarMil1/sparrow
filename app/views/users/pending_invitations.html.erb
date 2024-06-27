@@ -6,37 +6,59 @@
     <%= render "shared/invite_user_btn" %>
   </div>
   <% if @pending_users.any? %>
-    <table class="table-auto w-full text-sm text-left leading-5 bg-white rounded">
-      <thead class="text-xs uppercase border-b">
-        <tr class="text-[#101827]">
-          <th scope="col" class="px-4 py-2 md:px-6 md:py-3 rounded-tl-xl">Email</th>
-          <th scope="col" class="px-4 py-2 md:px-6 md:py-3">Role</th>
-          <th scope="col" class="px-4 py-2 md:px-6 md:py-3 rounded-tr-xl">Invitation Sent At</th>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>
+            <label>
+              <input type="checkbox" class="checkbox checkbox-sm" />
+            </label>
+          </th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Invitation Sent At</th>
+          <th>Status</th>
         </tr>
       </thead>
-      <tbody class="text-gray-500 divide-y">
+      <tbody>
         <% @pending_users.each do |user| %>
           <% unique_id = SecureRandom.hex(6) %>
           <tr>
-            <th scope="row" class="px-4 py-2 md:px-6 md:py-4 font-medium text-gray-900 whitespace-nowrap">
+            <th class="w-4">
+              <label>
+                <input type="checkbox" class="checkbox checkbox-sm" />
+              </label>
+            </th>
+
+            <th scope="row" class="whitespace-nowrap">
               <a href="<%= user_path(user) %>" class="flex w-min">
-                <div class="flex items-center gap-3 w-fit">
                   <%= render "shared/user_blob", user: user %>
-                  <div>
-                    <div class="text-gray-900">
-                      <%= user.first_name.capitalize %> <%= user.last_name.capitalize %>
-                    </div>
-                    <div class="text-gray-500 font-normal"><%= user.email %></div>
-                  </div>
-                </div>
               </a>
             </th>
-            <td class="px-4 py-2 md:px-6 md:py-4">
-              <%= user.roles.pluck(:name).join(',').capitalize %>
+
+            <td>
+              <%= render "shared/user_role_tag", user: user %>
             </td>
-            <td class="px-4 py-2 md:px-6 md:py-4 flex flex-col gap-1">
+
+            <td class="whitespace-nowrap opacity-50">
               <%= user.invitation_sent_at.strftime("%B %d, %Y %H:%M") %>
-              <%= button_to 'Resend', resend_invitation_user_path(user), method: :patch, class: "font-semibold text-indigo-600 hover:text-indigo-500 cursor-pointer" %>
+            </td>
+
+            <td>
+              <% if user.invitation_accepted? %>
+                    <div class="badge badge-success p-3 gap-2 mt-1">
+                        <%= heroicon "check" %> Accepted
+                    </div>
+                <% else %>
+                    <div class="flex gap-2 items-center mt-1 whitespace-nowrap"> 
+                        <div class="badge badge-warning p-3 gap-2">
+                            <%= heroicon "exclamation-triangle" %> Not accepted
+                        </div>
+                        <div>
+                            <%= button_to 'Resend invitation', resend_invitation_user_path(user), method: :patch, class: "link link-primary no-underline font-medium" %>
+                        </div>
+                    </div>
+                <% end %>
             </td>
           </tr>
         <% end %>
