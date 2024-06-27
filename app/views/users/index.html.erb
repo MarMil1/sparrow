@@ -1,6 +1,6 @@
 <h1 class="text-xl font-bold mb-6">User management</h1>
 
-<div class="mt-6 border rounded-xl overflow-x-auto">
+<div class="mt-6 border border-base-300 rounded-xl overflow-x-auto">
   <div class="flex sm:flex-row flex-col md:items-center items-start justify-between p-4">
     <%= render "user_selection_menu" %>
     <%= render "shared/invite_user_btn" %>
@@ -29,7 +29,7 @@
             </th>
           </tr>
         </thead>
-        <tbody class="divide-y">
+        <tbody>
           <% @users.each do |user| %>
             <% unique_id = SecureRandom.hex(6) %>
             <tr>

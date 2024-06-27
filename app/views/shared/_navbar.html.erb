@@ -18,7 +18,7 @@
                 <ul
                 tabindex="0"
                 class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 p-2 shadow">
-                    <div class="border-b p-2 flex justify-center items-center gap-4">
+                    <div class="border-b border-b-base-300 p-2 flex justify-center items-center gap-4">
                         <%= render "shared/user_blob", user: current_user %>
                         <%= render "shared/user_role_tag", user: current_user %>
                     </div>
@@ -38,7 +38,7 @@
                             </a>
                         <% end %>
                     </li>
-                    <li class="border-b mb-2">
+                    <li class="border-b border-b-base-300 mb-2">
                         <a href="<%= user_path(current_user) %>" class="mb-2">
                             <div class="py-1.5 flex gap-2 items-center">
                                 <%= heroicon "user" %> Profile & account

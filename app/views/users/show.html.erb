@@ -5,7 +5,7 @@
         <%= render "shared/user_blob", user: @user %>
     </div>
     <div class="mt-10">
-        <div class="p-4 border-b flex justify-between">
+        <div class="p-4 border-b border-b-base-300 flex justify-between">
             <div>
                 <h3 class="text-base font-semibold leading-7">Info</h3>
                 <p class="mt-1 max-w-2xl text-sm leading-6 opacity-60">Personal details and information.</p>
@@ -112,7 +112,7 @@
         </div>
     </div>
     <div class="mt-10">
-        <div class="p-4 border-b flex justify-between">
+        <div class="p-4 border-b border-b-base-300 flex justify-between">
             <div>
                 <h3 class="text-base font-semibold leading-7">Activity</h3>
                 <p class="mt-1 max-w-2xl text-sm leading-6 opacity-60">Activity details and status.</p>
@@ -215,7 +215,7 @@
     </div>
     <% if @user.roles.first.name == 'admin' %>
         <div class="mt-10">
-        <div class="p-4 border-b flex justify-between items-start">
+        <div class="p-4 border-b border-b-base-300 flex justify-between items-start">
             <div>
                 <h3 class="text-base font-semibold leading-7">Invitations</h3>
                 <p class="mt-1 max-w-2xl text-sm leading-6 opacity-60">List of users invited by you.</p>
@@ -224,7 +224,7 @@
                 <%= render "shared/invite_user_btn" %>
             </div>
         </div>
-        <div class="mt-6 border rounded-xl overflow-x-auto">
+        <div class="mt-6 border border-base-300 rounded-xl overflow-x-auto">
             <table class="table">
                 <thead>
                     <tr>
