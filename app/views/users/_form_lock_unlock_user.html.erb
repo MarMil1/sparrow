@@ -1,0 +1,18 @@
+<div class="max-w-screen-full pb-12 overflow-none">
+    <div class="mt-10">
+        <div class="p-4 border-b border-b-base-300">
+            <h3 class="font-semibold leading-7">Lock/Unlock account</h3>
+            <p class="mt-1 max-w-2xl text-sm leading-6 opacity-60">Disable or enable user login.</p>
+        </div>
+
+        <div class="flex justify-end items-start">
+            <div class="w-1/2 p-4 text-sm">
+                Toggle if this user account should be locked or unlock. 
+                Locking user account will prevent them from logging in and accessing their account.
+            </div>
+            <div class="w-1/2 py-2 text-right">
+                <%= render "button_lock_unlock_user", user: @user, btn_text: true %>
+            </div>
+        </div>
+    </div>
+<div>

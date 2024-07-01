@@ -1,5 +1,7 @@
 <% if current_user.roles.first.name == 'admin' %>
-    <a href="<%= invite_users_path %>" class="btn btn-primary btn-sm">
-        <%= heroicon "user-plus" %> Invite
-    </a>
+    <div class="tooltip tooltip-left" data-tip="Invite new user.">
+        <a href="<%= invite_users_path %>" class="btn btn-primary btn-sm">
+            <%= heroicon "user-plus" %>
+        </a>
+    </div>
 <% end %>

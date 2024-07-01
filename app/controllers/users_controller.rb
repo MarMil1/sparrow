@@ -25,7 +25,7 @@ class UsersController < ApplicationController
     end
 
     if @user.update(user_params)
-      redirect_to user_path(@user), notice: "User was successfully updated."
+      redirect_to (request.referrer || root_url), notice: "User was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -83,7 +83,6 @@ class UsersController < ApplicationController
       @user.lock_access!
       redirect_to (request.referrer || root_url), notice: "User account is locked."
     end
-    
   end
 
   private

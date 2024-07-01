@@ -1,50 +1,41 @@
 <h1 class="text-xl font-bold mb-6">User management</h1>
 
-<div class="mt-6 border border-base-300 rounded-xl overflow-x-auto">
+<div class="mt-6">
   <div class="flex sm:flex-row flex-col md:items-center items-start justify-between p-4">
     <%= render "user_selection_menu" %>
     <%= render "shared/invite_user_btn" %>
   </div>
   <% if current_user %>
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto border rounded-xl">
       <table class="table">
         <!-- head -->
         <thead>
           <tr>
             <th>
-              <label>
-                <input type="checkbox" class="checkbox checkbox-sm" />
-              </label>
-            </th>
-            <th>
               Name
             </th>
-            <th>
+            <th class="text-center">
               Role
             </th>
-            <th>
+            <th class="text-center">
               Locked
             </th>
-            <th>
+            <th class="text-center">
+              Action
             </th>
           </tr>
         </thead>
         <tbody>
-          <% @users.each do |user| %>
+          <% @users.sort.each do |user| %>
             <% unique_id = SecureRandom.hex(6) %>
             <tr>
-              <th class="w-4">
-                <label>
-                  <input type="checkbox" class="checkbox checkbox-sm" />
-                </label>
-              </th>
-              <td class="whitespace-nowrap">
+              <th class="whitespace-nowrap">
                 <div class="flex items-center">
                   <%= link_to user_path(user) do %>   
                     <%= render "shared/user_blob", user: user %>
                   <% end %>
                 </div>
-              </td>
+              </th>
 
               <td class="w-12">         
                 <div class="w-fit">
@@ -54,118 +45,22 @@
 
               <td class="w-12">
                 <% if user.access_locked? %>
-                  <div class="text-error text-[0.65rem] px-1 py-0.5">
+                  <div class="text-error text-[0.65rem] px-1 py-0.5  flex justify-center">
                     <%= heroicon "lock-closed", options: { class: "h-4 w-4", disable_default_class: true } %>
                   </div>
                 <% else %>
-                  <div class="text-success text-[0.65rem] px-1 py-0.5">
+                  <div class="text-success text-[0.65rem] px-1 py-0.5 flex justify-center">
                     <%= heroicon "lock-open", options: { class: "h-4 w-4", disable_default_class: true } %>
                   </div>
                 <% end %>
               </td>
 
               <td class="w-12">
-                <div class="dropdown dropdown-bottom dropdown-end">
-                  <div tabindex="0" role="button" class="btn bg-inherit shadow-none border-none hover:bg-inherit">
-                    <%= heroicon "ellipsis-horizontal" %>
-                  </div>
-                  <ul class="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-
-                    <li>
-                      <a href="<%= user_path(user) %>">
-                        <%= heroicon "user" %> View user
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="<%= edit_user_path(user) %>">
-                        <%= heroicon "pencil-square" %> Edit user
-                      </a>
-                    </li>
-
-                    <li class="mb-2">
-                      <button onclick="lock_user_modal_<%=unique_id%>.showModal()">
-                        <%= lock_status(user) %>
-                      </button>
-                    </li>
-
-                    <li class="border-t">
-                      <button class="mt-2" onclick="delete_user_modal_<%=unique_id%>.showModal()">
-                        <%= heroicon "trash" %> Delete user
-                      </button>
-                    </li>
-
-                  </ul>
-                </div>
+                 <a href="<%= edit_user_path(user) %>" class="btn-sm btn-ghost rounded-lg font-medium text-primary">
+                    Edit
+                  </a>
               </td>
             </tr>
-
-            <!-- Dialog box for LOCK USER -->
-            <dialog id="lock_user_modal_<%=unique_id%>" class="modal modal-bottom sm:modal-middle">
-              <div class="modal-box">
-                <form method="dialog">
-                  <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" 
-                    onclick="document.getElementById('lock_user_modal_<%=unique_id%>').close();">✕</button>
-                </form>
-                <div class="flex gap-3 items-start">
-                  <div class="p-2 bg-red-100 rounded-full">
-                    <%= heroicon "exclamation-triangle", options: { class: "text-error" } %>
-                  </div>
-                  <div>
-                    <h3 class="text-lg font-bold"><%= lock_status_dialog_confirmation_title(user) %></h3>  
-                    <p class="py-2"><%= lock_status_dialog_confirmation_content(user) %></p>
-                    <p class="link link-primary no-underline cursor-default">
-                      <%= user.first_name.capitalize %> <%= user.last_name.capitalize %>
-                    </p>
-                  </div>
-                </div>
-                <div class="modal-action">
-                  <!-- Form for logging out -->
-                  <%= form_with url: lock_user_account_user_path(user), method: :patch do %>
-                    <button type="button" class="btn btn-sm" onclick="document.getElementById('lock_user_modal_<%=unique_id%>').close();">
-                      Cancel
-                    </button>
-                    <%= button_tag lock_status(user).html_safe, class: "btn btn-error btn-sm" %>
-                  <% end %>
-                </div>
-              </div>
-              <div class="modal-backdrop" onclick="document.getElementById('lock_user_modal_<%=unique_id%>').close();"></div>
-            </dialog>
-
-            <!-- Dialog box for DELETE USER -->
-            <dialog id="delete_user_modal_<%=unique_id%>" class="modal modal-bottom sm:modal-middle">
-              <div class="modal-box">
-                <form method="dialog">
-                  <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" 
-                    onclick="document.getElementById('delete_user_modal_<%=unique_id%>').close();">✕</button>
-                </form>
-                <div class="flex gap-3 items-start">
-                  <div class="p-2 bg-red-100 rounded-full">
-                    <%= heroicon "exclamation-triangle", options: { class: "text-error" } %>
-                  </div>
-                  <div>
-                    <h3 class="text-lg font-bold">
-                      Delete user 
-                    </h3>
-                    <p class="py-2">You are about to delete this user.<br>Are you sure?</p>
-                    <p class="link link-primary no-underline cursor-default">
-                      <%= user.first_name.capitalize %> <%= user.last_name.capitalize %>
-                    </p>
-                  </div>
-                </div>
-                <div class="modal-action">
-                  <!-- Form for logging out -->
-                  <%= form_with url: lock_user_account_user_path(user), method: :patch do %>
-                    <button type="button" class="btn btn-sm" onclick="document.getElementById('delete_user_modal_<%=unique_id%>').close();">
-                      Cancel
-                    </button>
-                    <%= button_tag "Delete user", class: "btn btn-error btn-sm" %>
-                  <% end %>
-                </div>
-              </div>
-              <div class="modal-backdrop" onclick="document.getElementById('delete_user_modal_<%=unique_id%>').close();"></div>
-            </dialog>
-            
           <% end %>
         </tbody>
       </table>

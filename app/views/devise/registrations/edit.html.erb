@@ -1,30 +1,63 @@
-<div class="bg-steel-200 text-xl bold max-w-screen-sm m-auto text-center mb-8">
-    <h2>Edit profile</h2>
-</div>
+<h1 class="text-xl font-bold ml-4 mb-6">Edit profile</h1>
 
 <%= render "users/form" %>
 
 <%= render "form_edit_password", resource: resource, resource_name: resource_name %>
 
-<div class="max-w-screen-sm pb-12">
-    <div class="rounded border mt-10">
-        <div class="text-red-600 text-lg p-4 font-semibold">
-            Delete account
+<div class="max-w-screen-full pb-12">
+    <div class="mt-10">
+        <div class="p-4 border-b border-b-base-300">
+            <h3 class="font-semibold leading-7">Delete account</h3>
+            <p class="mt-1 max-w-2xl text-sm leading-6 opacity-60">Delete your account and information.</p>
         </div>
 
-        <div class="flex justify-between items-center">
-            <div class="w-1/2 text-[#101827] p-4 text-sm">
-                All of the data will be deleted. You will not be able to retrieve the account.
+        <div class="flex justify-end items-start">
+            <div class="w-1/2 p-4 text-sm">
+                All of the user data will be deleted. You will not be able to retrieve the account.
             </div>
-            <div class="w-1/2 px-4 py-2 text-[#101827]">
-                <div class="float-right">
-                    <%= render 'shared/dialog_box', id: 'dialog-3', title: 'Delete account', content: 'Are you sure you want to delete the account? All of the data will be permanently removed. This action cannot be undone.' do %>
-                        <%= button_to "Cancel my account", registration_path(resource_name), data: { turbo_method: :delete }, class: "inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" %>
-                    <% end %>
-
-                    <button data-dialog-toggle="dialog-3" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Delete account</button>
-                </div>
+            <div class="w-1/2 py-2 text-right">
+                <% unique_id = SecureRandom.hex(6) %>
+                <button class="btn btn-sm btn-error mt-2" onclick="delete_user_modal_1<%=unique_id%>.showModal()">
+                    <%= heroicon "trash" %> Delete user
+                </button>
             </div>
         </div>
     </div>
 <div>
+
+<!-- Dialog box for DELETE USER -->
+<dialog id="delete_user_modal_1<%=unique_id%>" class="modal modal-bottom sm:modal-middle">
+    <div class="modal-box">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" 
+                onclick="document.getElementById('delete_user_modal_1<%=unique_id%>').close();">✕
+            </button>
+        </form>
+        <div class="flex gap-3 items-start">
+            <div class="p-2 bg-red-100 rounded-full">
+                <%= heroicon "exclamation-triangle", options: { class: "text-error" } %>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold">
+                    Delete user 
+                </h3>
+                <p class="py-1">You are about to delete this user.</p>
+                <p>Are you sure?</p>
+                <p class="py-1 link link-primary no-underline cursor-default">
+                    <%= @user.first_name.capitalize %> <%= @user.last_name.capitalize %>
+                </p>
+            </div>
+        </div>
+        <div class="modal-action">
+            <%= form_with url: registration_path(resource_name), method: :delete, class: "flex gap-2" do %>
+                <button type="button" class="btn btn-sm" onclick="document.getElementById('delete_user_modal_1<%=unique_id%>').close();">
+                    Cancel
+                </button>
+                <%= button_tag class: "btn btn-error btn-sm" do %>
+                    <%= heroicon "trash" %> Delete user
+                <% end %>
+            <% end %>
+        </div>
+    </div>
+    <div class="modal-backdrop" onclick="document.getElementById('delete_user_modal_1<%=unique_id%>').close();"></div>
+</dialog>

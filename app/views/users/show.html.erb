@@ -29,86 +29,60 @@
             <% end %>
         </div>
         <div class="mt-6">
-        <dl class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+            <dl class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
 
-            <div class="p-4">
-                <dt class="text-sm font-medium leading-6 flex gap-2">
-                    <span>First name</span>
-                    <span class="link link-primary opacity-50" onclick="editField('first_name')"><%= heroicon "pencil-square" %></span>
-                </dt>
-                <dd id="first_name_display" class="mt-1 text-sm leading-6 opacity-60 sm:mt-0"><%= @user.first_name.capitalize %></dd>
-                <div id="first_name_edit" class="hidden">
-                    <form id="first_name_form" action="<%= user_path(@user) %>" method="post" data-remote="true">
-                        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-                        <%= hidden_field_tag '_method', 'patch' %>
-                        <%= text_field_tag 'user[first_name]', @user.first_name, class: "input input-sm input-bordered w-full mb-2 mt-2" %>
-                        <button type="submit" class="btn btn-xs btn-primary">Save</button>
-                        <button type="button" class="btn btn-xs" onclick="cancelEdit('first_name')">Cancel</button>
-                    </form>
+                <div class="p-4">
+                    <dt class="text-sm font-medium leading-6 flex gap-2">
+                        <span>First name</span>
+                        <span class="link link-primary opacity-50" onclick="editField('first_name')"><%= heroicon "pencil-square" %></span>
+                    </dt>
+                    <dd id="first_name_display" class="mt-1 text-sm leading-6 opacity-60 sm:mt-0"><%= @user.first_name.capitalize %></dd>
+                    <div id="first_name_edit" class="hidden">
+                        <form id="first_name_form" action="<%= user_path(@user) %>" method="post" data-remote="true">
+                            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                            <%= hidden_field_tag '_method', 'patch' %>
+                            <%= text_field_tag 'user[first_name]', @user.first_name, class: "input input-sm input-bordered w-full mb-2 mt-2" %>
+                            <button type="submit" class="btn btn-xs btn-primary">Save</button>
+                            <button type="button" class="btn btn-xs" onclick="cancelEdit('first_name')">Cancel</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
-            <div class="p-4">
-                <dt class="text-sm font-medium leading-6 flex gap-2">
-                    <span>Last name</span>
-                    <span class="link link-primary opacity-50" onclick="editField('last_name')"><%= heroicon "pencil-square" %></span>
-                </dt>
-                <dd id="last_name_display" class="mt-1 text-sm leading-6 opacity-60 sm:mt-0"><%= @user.last_name.capitalize %></dd>
-                <div id="last_name_edit" class="hidden">
-                    <form id="last_name_form" action="<%= user_path(@user) %>" method="post" data-remote="true">
-                        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-                        <%= hidden_field_tag '_method', 'patch' %>
-                        <%= text_field_tag 'user[last_name]', @user.last_name, class: "input input-sm input-bordered w-full mb-2 mt-2" %>
-                        <button type="submit" class="btn btn-xs btn-primary">Save</button>
-                        <button type="button" class="btn btn-xs" onclick="cancelEdit('last_name')">Cancel</button>
-                    </form>
+                <div class="p-4">
+                    <dt class="text-sm font-medium leading-6 flex gap-2">
+                        <span>Last name</span>
+                        <span class="link link-primary opacity-50" onclick="editField('last_name')"><%= heroicon "pencil-square" %></span>
+                    </dt>
+                    <dd id="last_name_display" class="mt-1 text-sm leading-6 opacity-60 sm:mt-0"><%= @user.last_name.capitalize %></dd>
+                    <div id="last_name_edit" class="hidden">
+                        <form id="last_name_form" action="<%= user_path(@user) %>" method="post" data-remote="true">
+                            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                            <%= hidden_field_tag '_method', 'patch' %>
+                            <%= text_field_tag 'user[last_name]', @user.last_name, class: "input input-sm input-bordered w-full mb-2 mt-2" %>
+                            <button type="submit" class="btn btn-xs btn-primary">Save</button>
+                            <button type="button" class="btn btn-xs" onclick="cancelEdit('last_name')">Cancel</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
-            <div class="p-4">
-                <dt class="text-sm font-medium leading-6 flex gap-2">
-                    <span>Email address</span>
-                    <% if current_user == @user %>
-                        <a href="<%= edit_user_registration_path %>">
-                            <span class="link link-primary opacity-50"><%= heroicon "pencil-square" %></span>
-                        </a>
-                    <% end %>
-                </dt>
-                <dd class="mt-1 text-sm leading-6 opacity-60 sm:mt-0"><%= @user.email %></dd>
-            </div>
-            <div class="p-4">
-                <dt class="text-sm font-medium leading-6">Role</dt>
-                <dd class="mt-1 text-sm leading-6 sm:mt-0 flex gap-2">
-                    <% if current_user.roles.first.name == 'admin' && current_user != @user %>
-                        <div class="dropdown dropdown-end">
-                            <button class="btn btn-sm btn-<%= user_role_color(@user) %> btn-outline">
-                                <%= render "shared/user_role_tag", user: @user %>
-                                <%= heroicon "chevron-down" %>
-                            </button>
-                            <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                                <% User.available_roles.each do |role| %>
-                                    <li>
-                                        <%= form_with(model: @user, url: user_path(@user), method: :patch, class: "inline") do |f| %>
-                                            <%= f.hidden_field :role, value: role %>
-                                            <button type="submit" class="cursor-pointer w-full text-left">
-                                                <div class="flex justify-between items-center">
-                                                    <span><%= role.capitalize %></span>
-                                                    <% if @user.has_role?(role) %>
-                                                        <%= heroicon "check", options: { class: "w-4 h-4 text-success" } %>
-                                                    <% end %>
-                                                </div>
-                                            </button>
-                                        <% end %>
-                                    </li>
-                                <% end %>
-                            </ul>
-                        </div>
-                    <% else %>
-                        <%= render "shared/user_role_tag", user: @user %>
-                    <% end %>
-                </dd>
-            </div>
-        </dl>
+                <div class="p-4">
+                    <dt class="text-sm font-medium leading-6 flex gap-2">
+                        <span>Email address</span>
+                        <% if current_user == @user %>
+                            <a href="<%= edit_user_registration_path %>">
+                                <span class="link link-primary opacity-50"><%= heroicon "pencil-square" %></span>
+                            </a>
+                        <% end %>
+                    </dt>
+                    <dd class="mt-1 text-sm leading-6 opacity-60 sm:mt-0"><%= @user.email %></dd>
+                </div>
+                <div class="p-4">
+                    <dt class="text-sm font-medium leading-6">Role</dt>
+                    <dd class="mt-1 text-sm leading-6 sm:mt-0 flex gap-2">
+                        <%= render "form_user_role_selection", user: @user, dropdown_position: "dropdown-start" %>
+                    </dd>
+                </div>
+            </dl>
         </div>
     </div>
     <div class="mt-10">
@@ -119,21 +93,13 @@
             </div>
             <div>
                 <% if @user.access_locked? %>
-                    <% if current_user.roles.first.name == 'admin' && current_user != @user %>
-                        <div class="tooltip tooltip-left" data-tip="Unlock user account.">
-                            <button class="btn btn-success btn-sm" onclick="lock_user_modal_show_1<%=@user.id%>.showModal()">
-                                <%= heroicon "lock-open" %>
-                            </button>
-                        </div>
-                    <% end %>
+                    <div class="tooltip tooltip-left" data-tip="Unlock user account.">
+                        <%= render "button_lock_unlock_user", user: @user, btn_text: false %>
+                    </div>
                 <% else %>
-                    <% if current_user.roles.first.name == 'admin' && current_user != @user %>
-                        <div class="tooltip tooltip-left" data-tip="Lock user account.">
-                            <button class="btn btn-error btn-sm" onclick="lock_user_modal_show_1<%=@user.id%>.showModal()">
-                                <%= heroicon "lock-closed" %>
-                            </button>
-                        </div>
-                    <% end %>
+                    <div class="tooltip tooltip-left" data-tip="Lock user account.">
+                        <%= render "button_lock_unlock_user", user: @user, btn_text: false %>
+                    </div>
                 <% end %>
             </div>
         </div>
@@ -270,45 +236,14 @@
                 </tbody>
             </table>
             <% if @user.invitations.count == 0 %>
-            <div class="p-4 opacity-50 text-sm text-center">
-                No user invitations found
-            </div>
+                <div class="p-4 opacity-50 text-sm text-center">
+                    No user invitations found
+                </div>
             <% end %>
         </div>
         </div>
     <% end %>
 </div>
-
-<!-- Dialog modal for LOCK/UNLOCK user -->
-<dialog id="lock_user_modal_show_1<%=@user.id%>" class="modal modal-bottom sm:modal-middle">
-    <div class="modal-box">
-        <form method="dialog">
-            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" 
-            onclick="document.getElementById('lock_user_modal_show_1<%=@user.id%>').close();">✕</button>
-        </form>
-        <div class="flex gap-3 items-start">
-            <div class="p-2 bg-red-100 rounded-full">
-            <%= heroicon "exclamation-triangle", options: { class: "text-error" } %>
-            </div>
-            <div>
-                <h3 class="text-lg font-bold"><%= lock_status_dialog_confirmation_title(@user) %></h3>  
-                <p class="py-2"><%= lock_status_dialog_confirmation_content(@user) %></p>
-                <p class="link link-primary no-underline cursor-default">
-                    <%= @user.first_name.capitalize %> <%= @user.last_name.capitalize %>
-                </p>
-            </div>
-        </div>
-        <div class="modal-action">
-            <%= form_with url: lock_user_account_user_path(@user), method: :patch, class: "flex gap-2" do %>
-                <button type="button" class="btn btn-sm" onclick="document.getElementById('lock_user_modal_show_1<%=@user.id%>').close();">
-                    Cancel
-                </button>
-                <%= button_tag lock_status(@user).html_safe, class: "btn btn-error btn-sm" %>
-            <% end %>
-        </div>
-    </div>
-    <div class="modal-backdrop" onclick="document.getElementById('lock_user_modal_show_1<%=@user.id%>').close();"></div>
-</dialog>
 
 <script>
     document.addEventListener("turbo:load", () => {

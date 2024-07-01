@@ -1,0 +1,49 @@
+<% if user.access_locked? %>
+    <% if current_user.roles.first.name == 'admin' && current_user != user %>    
+        <button class="btn btn-success btn-sm" onclick="lock_user_modal_show_1<%=user.id%>.showModal()">
+            <%= heroicon "lock-open" %> 
+            <% if btn_text == true %>
+                <%= lock_status_dialog_confirmation_title(user) %>
+            <% end %>
+        </button>
+    <% end %>
+<% else %>
+    <% if current_user.roles.first.name == 'admin' && current_user != user %>
+        <button class="btn btn-error btn-sm" onclick="lock_user_modal_show_1<%=user.id%>.showModal()">
+            <%= heroicon "lock-closed" %>
+            <% if btn_text == true %>
+                <%= lock_status_dialog_confirmation_title(user) %>
+            <% end %>
+        </button>
+    <% end %>
+<% end %>
+
+<dialog id="lock_user_modal_show_1<%=user.id%>" class="modal modal-bottom sm:modal-middle text-left">
+    <div class="modal-box">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" 
+            onclick="document.getElementById('lock_user_modal_show_1<%=user.id%>').close();">✕</button>
+        </form>
+        <div class="flex gap-3 items-start">
+            <div class="p-2 bg-red-100 rounded-full">
+            <%= heroicon "exclamation-triangle", options: { class: "text-error" } %>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold"><%= lock_status_dialog_confirmation_title(user) %></h3>  
+                <p class="py-2"><%= lock_status_dialog_confirmation_content(user) %></p>
+                <p class="link link-primary no-underline cursor-default">
+                    <%= user.first_name.capitalize %> <%= user.last_name.capitalize %>
+                </p>
+            </div>
+        </div>
+        <div class="modal-action">
+            <%= form_with url: lock_user_account_user_path(user), method: :patch, class: "flex gap-2" do %>
+                <button type="button" class="btn btn-sm" onclick="document.getElementById('lock_user_modal_show_1<%=user.id%>').close();">
+                    Cancel
+                </button>
+                <%= button_tag lock_status(user).html_safe, class: "btn btn-error btn-sm" %>
+            <% end %>
+        </div>
+    </div>
+    <div class="modal-backdrop" onclick="document.getElementById('lock_user_modal_show_1<%=user.id%>').close();"></div>
+</dialog>
