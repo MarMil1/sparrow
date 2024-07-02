@@ -54,14 +54,12 @@ class UsersController < ApplicationController
       @user.add_role(user_params[:role])
       redirect_to users_path, notice: 'User invitation sent successfully.'
     else
-      render :invite
+      render :invite, alert: "Something went wrong. Try again."
     end
   end
 
   def resend_invitation
-    puts "This is in resend_invitation method in users_controller.rb."
     @user = User.find(params[:id])
-    puts "This is after @USER in resend_invitation method in users_controller.rb."
     if @user.created_by_invite? && @user.invitation_accepted? == false
       @user.invite!
       redirect_to (request.referrer || root_url), notice: "User re-invite email was successfully sent."

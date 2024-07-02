@@ -1,47 +1,55 @@
-<h1 class="text-xl bold mb-6">Invite users</h1>
+<h1 class="text-xl font-bold mb-6">Invite users</h1>
 
-<div class="border max-w-xl m-auto p-4 rounded">
+<div class="max-w-screen m-auto p-4">
   <%= form_for(@user, url: invite_users_path) do |f| %>
-    <div class="flex flex-col mb-4">
-      <%= f.label :first_name, class: "mb-2" %>
-      <%= f.text_field :first_name, class: "border rounded p-2 bg-slate-50" %>
+    <% role_descriptions = {
+      'admin' => "Admins have full access to all features and settings within the application.",
+      'staff' => "Staff members can manage and perform tasks assigned to them within their designated scope.",
+      'client' => "Clients have limited access and can interact with specific features related to their account and services."
+    } %>
+    <div class="flex flex-col mb-2">
+      <%= f.label :first_name, class: "mb-1 text-sm font-medium", for: "user_first_name" %>
+      <%= f.text_field :first_name, class: "input input-sm input-bordered w-full mb-2", id: "user_first_name" %>
     </div>
-    <div class="flex flex-col mb-4">
-      <%= f.label :last_name, class: "mb-2" %>
-      <%= f.text_field :last_name, class: "border rounded p-2 bg-slate-50" %>
+    <div class="flex flex-col mb-2">
+      <%= f.label :last_name, class: "mb-1 text-sm font-medium", for: "user_last_name" %>
+      <%= f.text_field :last_name, class: "input input-sm input-bordered w-full mb-2", id: "user_last_name" %>
     </div>
-    <div class="flex flex-col mb-4">
-      <%= f.label :email, class: "mb-2" %>
-      <%= f.email_field :email, class: "border rounded p-2 bg-slate-50" %>
+    <div class="flex flex-col mb-2">
+      <%= f.label :email, class: "mb-1 text-sm font-medium", for: "user_email" %>
+      <%= f.email_field :email, class: "input input-sm input-bordered w-full mb-2", id: "user_email" %>
     </div>
-    <div class="flex flex-col mb-4">
-      <%= f.label :role, class: "mb-2" %>
-      <% unique_id = SecureRandom.hex(6) %>
-      <% selection_items = ['client', 'staff', 'admin'] %>
 
-      <% content_for :toggle_dropdown_selection do %>
-        <p id="toggle-<%= unique_id %>" type="button" class="inline-flex w-full justify-between items-center border rounded bg-slate-50 px-3 py-2 text-[#101827] hover:bg-slate-100">
-          <%= selection_items.first.capitalize %> <!-- Default to first selection item -->
-          <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-          </svg>
-        </p>
-      <% end %>
-
-      <% content_for :menu_dropdown_selection do %>
-        <% selection_items.each do |selection_item| %>
-          <p class="cursor-pointer p-2 hover:bg-slate-200" data-selection-item="<%= selection_item %>" data-selection-toggle-id="toggle-<%= unique_id %>" data-selection-hidden-id="selection-item-hidden-<%= unique_id %>">
-            <%= selection_item.capitalize %>
-          </p>
+    <div class="flex flex-col mb-2">
+      <label class="mb-2 text-sm font-medium">Select a role for this user:</label>
+      <div class="role-list">
+        <% User.available_roles.each_with_index do |role, index| %>
+          <% role_id = "user_role_#{index}" %>
+          <div class="flex flex-col gap-2 mb-2">
+            <label class="flex items-center cursor-pointer" for="<%= role_id %>">
+              <input type="radio" checked="<%=index.zero?%>" name="user[role]" value="<%= role %>" class="radio radio-xs role-selector" data-role-name="<%= role.capitalize %>" id="<%= role_id %>">
+              <span class="ml-2 text-sm font-medium"><%= role.capitalize %></span>
+            </label>
+            <p class="text-xs text-gray-500 ml-6"><%= role_descriptions[role] %></p>
+          </div>
         <% end %>
-      <% end %>
-
-      <%= render 'shared/dropdown_selection', id: "dropdown-selection-#{unique_id}", toggle: :toggle_dropdown_selection, menu: :menu_dropdown_selection %>
-      <%= f.hidden_field :role, id: "selection-item-hidden-#{unique_id}", value: selection_items.first %> <!-- Default to first selection item -->
+      </div>
     </div>
-    <div class="flex mb-4 pt-4 gap-2 justify-end">
-      <%= link_to "Cancel", :back, class: "mt-3 inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-slate-200 hover:bg-gray-50 mt-0 w-auto" %>
-      <%= f.submit 'Send invitation', class: "inline-flex justify-center cursor-pointer rounded-md bg-indigo-600 hover:bg-indigo-500 p-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 mt-0 w-auto" %>
+
+    <div class="flex mt-4 mb-4 pt-4 gap-2 justify-end">
+      <%= link_to "Cancel", :back, class: "btn btn-sm" %>
+      <%= f.submit 'Send invitation', class: "btn btn-sm btn-primary" %>
     </div>
   <% end %>
 </div>
+
+<script>
+  document.addEventListener('turbo:load', function() {
+    document.querySelectorAll('.role-selector').forEach(function(selector) {
+      selector.addEventListener('change', function() {
+        const selectedRole = this.dataset.roleName;
+        document.getElementById('selectedRole').textContent = selectedRole;
+      });
+    });
+  });
+</script>
